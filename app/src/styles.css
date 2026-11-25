@@ -1,0 +1,60 @@
+/* VOICE: calm, encouraging study companion
+   IDEA: a Japanese study notebook (和紙 page, 朱印 stamp)
+   PICTURE: the working app itself, today card first
+   COLOUR+TYPE: washi off-white, vermilion accent, indigo support; Noto Serif JP for Japanese, Noto Sans TC for UI
+   LAYOUT: phone column ≤ 480px, bottom tab bar, centred on wide screens */
+:root{color-scheme:light dark;--bg:light-dark(#F7F3EA,#17140F);--card:light-dark(#FFFFFF,#221E18);--line:light-dark(#E6DED0,#3A342B);--ink:light-dark(#1F1B16,#F1ECE2);--mute:light-dark(#6B645A,#B3AA9B);--red:light-dark(#C23B22,#E2664D);--redink:light-dark(#A12F1A,#F08A74);--blue:light-dark(#2F4A7A,#8FB0E8);--gold:light-dark(#B07A1E,#E0B25C);--ok:light-dark(#2E6A40,#7CC795);--okbg:light-dark(#E7F1E9,#1D3324);--badbg:light-dark(#FBEAE6,#3A2019);--soft:light-dark(#EFE8DA,#2E2920)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 'Noto Sans TC',system-ui,sans-serif;overflow-x:clip}
+.jp{font-family:'Noto Serif JP','Hiragino Mincho ProN',serif}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+main{flex:1;padding:24px 18px 110px;display:flex;flex-direction:column;gap:14px}
+h1{font:700 28px/1.2 'Noto Serif JP',serif;margin:0}
+h2{font-size:17px;margin:0}
+.sub{color:var(--mute);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+.hero{background:light-dark(#C23B22,#9E2F1A);color:#fff;border:0;border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{background:rgba(255,255,255,.16);border-radius:12px;padding:10px}.stat b{display:block;font-size:24px;line-height:1.2}.stat span{font-size:13px}
+button,.btn{font:inherit;min-height:48px;border-radius:14px;border:0;padding:0 18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.primary{background:var(--red);color:#fff}.light{background:#fff;color:#A12F1A}.ghost{background:transparent;border:1.5px solid var(--blue);color:var(--blue)}.indigo{background:var(--blue);color:#fff}
+a.btn{text-decoration:none}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+button:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}.wrap{flex-wrap:wrap}
+.rings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;text-align:center}
+.rings small{color:var(--mute);display:block}
+.rings>div{display:flex;flex-direction:column;align-items:center;gap:2px}
+.pill{font-size:13px;border-radius:999px;padding:3px 10px;background:var(--soft);color:var(--mute);white-space:nowrap}
+.pill.red{background:var(--badbg);color:var(--redink);font-weight:700}.pill.blue{background:var(--blue);color:#fff}
+.unit{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:var(--card);width:100%;text-align:left;color:inherit;font-weight:400;min-height:64px}
+.unit.locked{background:transparent;border-style:dashed;cursor:not-allowed}
+.dot{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:var(--soft);color:var(--mute)}
+.dot.done{background:var(--blue);color:#fff}.dot.now{background:var(--red);color:#fff}
+.bar{height:8px;background:var(--soft);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--red);border-radius:4px}
+.big{font-size:96px;line-height:1.05;font-weight:700;text-align:center}
+.read{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.read div{background:var(--bg);border-radius:12px;padding:10px 12px}.read b{color:var(--blue);font-size:20px}
+.warn{background:light-dark(#FFF6E5,#33280F);border:1px solid light-dark(#EBD3A3,#5C4A22);border-radius:14px;padding:10px 12px;font-size:14px}
+label{font-size:14px;font-weight:700}
+input[type=text]{width:100%;height:56px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);padding:0 16px;font:20px 'Noto Serif JP',serif}
+select{font:inherit;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:0 10px}
+.fb{border-radius:14px;padding:12px 14px}.fb.ok{background:var(--okbg);color:var(--ok)}.fb.bad{background:var(--badbg)}.fb.bad b{color:var(--redink)}
+.choices{display:grid;gap:10px}.choice{background:var(--card);border:1.5px solid var(--line);color:var(--ink);justify-content:flex-start;text-align:left;font-weight:500;padding:10px 14px}
+.choice.right{border-color:var(--ok);background:var(--okbg)}.choice.wrong{border-color:var(--red);background:var(--badbg)}
+.kana{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.kana div{background:var(--card);border:1px solid var(--line);border-radius:10px;text-align:center;padding:6px 0}.kana b{display:block;font:700 22px 'Noto Serif JP',serif}.kana small{color:var(--mute)}
+.top{display:flex;align-items:center;gap:12px}.top .bar{flex:1}
+.x{min-height:44px;width:44px;padding:0;background:transparent;color:var(--mute)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:6px 4px calc(10px + env(safe-area-inset-bottom))}
+nav a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;color:var(--mute);text-decoration:none;min-height:48px;justify-content:center;border-radius:10px}
+nav a[aria-current=page]{color:var(--red);font-weight:700}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2}
+.stamp{width:86px;height:86px;border-radius:50%;border:3px solid var(--red);color:var(--red);display:grid;place-items:center;transform:rotate(-8deg);font:700 22px 'Noto Serif JP',serif;flex:none}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;align-items:end;height:90px}
+.days div{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;height:100%;font-size:12px;color:var(--mute)}.days i{display:block;width:70%;background:var(--blue);border-radius:4px 4px 0 0;min-height:2px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:20px;z-index:9}
+.modal .card{max-width:380px;width:100%}
+.note{font-size:13px;color:var(--mute)}
+@media (prefers-reduced-motion:no-preference){.pop{animation:pop .35s ease-out}@keyframes pop{from{transform:scale(.96);opacity:.4}to{transform:none;opacity:1}}}

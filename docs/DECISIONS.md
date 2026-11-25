@@ -16,3 +16,6 @@
 | 10 | 2026-11-25 | 正式版：React+Vite PWA＋Capacitor；Cloudflare Pages/Workers/D1/R2 | 一套程式碼跑網頁與 App；MY 的其他專案都在 Cloudflare | Flutter；Supabase；Vercel |
 | 11 | 2026-11-25 | 名稱 mojowu；repo `mywu-cloud/mojowu`；網址 mojowu.pages.dev | MY 決定 | 漢橋日語 KanBridge 等候選 |
 | 12 | 2026-11-25 | 模擬考只自行命題 | JLPT 官方考題有著作權 | 收錄歷屆試題 |
+| 13 | 2026-11-25 | B1 移植時 FSRS 保留自寫公式，不換 `ts-fsrs` | 封測者卡片已依現行公式排程，換套件會讓間隔跳動；先以對照測試鎖住行為，換套件另開工作 | 移植同時換 ts-fsrs |
+| 14 | 2026-11-25 | `app/` 與 MVP 並存，暫不改 Pages 部署 | 切換部署需改 Pages 設定（B5），先讓 MY 確認；並存期間兩邊共用課程資料與 e2e | 直接以 app 取代 MVP |
+| 15 | 2026-11-25 | 畫面狀態用自寫的 `bump()`＋`useSyncExternalStore`，不引入狀態管理套件 | 與 MVP 結構一一對應、移植風險最低、零依賴 | Zustand、Redux |

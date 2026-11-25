@@ -26,7 +26,7 @@ MVP 沒有後端，這些數字目前無法收集 → 待辦 A3。
 
 ### B. 工程化
 
-- [ ] B1 建 `app/`：Vite + React + TS，依 `docs/ARCHITECTURE.md` §3 拆模組，功能與 MVP 對等
+- [x] B1 建 `app/`：Vite + React + TS，依 `docs/ARCHITECTURE.md` §3 拆模組，功能與 MVP 對等（2026-11-25；e2e 與 MVP 共用、vitest 對照 MVP 函式一致）
 - [ ] B2 單元測試：romaji、answer matching、FSRS（以現行公式做回歸）、解鎖
 - [ ] B3 localStorage `mojowu-v1` → IndexedDB 遷移
 - [ ] B4 GitHub Actions：PR 跑測試；資料 JSON schema 驗證

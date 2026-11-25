@@ -1,0 +1,8 @@
+node_modules/
+dist/
+# 由 scripts/sync-public.mjs 從 ../public 複製
+public/data/
+public/icon.svg
+public/icon-192.png
+public/icon-512.png
+public/manifest.webmanifest

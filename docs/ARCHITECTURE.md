@@ -57,6 +57,14 @@ hash 路由：`#home #path #review #jlpt #me #kana`。學習回合（`session`�
 
 答錯的項目會推回 `queue` 尾端，同一回合答對才結束；只有**第一次作答**會寫入 FSRS。
 
+## 1.5 `app/`（React 版，B1）
+
+模組對照與指令見 `app/README.md`。重點：
+
+- 狀態模型、localStorage key、hash 路由、回合規則都與 MVP 相同；畫面狀態放 `store/ui.ts`，改完呼叫 `bump()`，元件用 `useUi()`（`useSyncExternalStore`）訂閱。之後要換成 Zustand 等也只動這一檔。
+- 課程資料仍只有 `public/data/n5.json` 一份，build 前同步進 `app/public/`。
+- `test/parity.test.ts` 直接執行 `public/index.html` 內的函式做對照，確保移植零行為差異。
+
 ## 2. 目標架構（正式版）
 
 ```
@@ -87,7 +95,7 @@ hash 路由：`#home #path #review #jlpt #me #kana`。學習回合（`session`�
 ## 3. 遷移步驟（建議順序）
 
 1. 建 `app/`（Vite + React + TS），把 `public/index.html` 的區塊拆成模組：
-   `content/`（載入與型別）、`lib/romaji.ts`、`lib/fsrs.ts`（建議改用開源套件 `ts-fsrs`）、`store/`（狀態）、`screens/`（5 分頁＋回合）。
+   `content/`（載入與型別）、`lib/romaji.ts`、`lib/fsrs.ts`（暫保留自寫公式，見決策 13）、`store/`（狀態）、`screens/`（5 分頁＋回合）。
 2. 保持 localStorage 相容：首次啟動讀 `mojowu-v1` 轉進 IndexedDB。
 3. 補單元測試：romaji、answer matching、FSRS、解鎖。
 4. Cloudflare Pages build command 改 `npm run build`、output `app/dist`（這一步會改部署設定，先告知 MY）。

@@ -1,0 +1,21 @@
+import { S, save, replaceState, defaultState } from '../store/state';
+import { ui, bump } from '../store/ui';
+
+export function Me() {
+  const all = Object.values(S.cards), dayKeys = Object.keys(S.log).length;
+  const setMsg = (m: string) => { ui.msg = m; bump(); };
+  const copy = () => navigator.clipboard.writeText(JSON.stringify(S)).then(() => setMsg('已複製到剪貼簿。'), () => setMsg('無法存取剪貼簿。'));
+  return <>
+    <h1>我的</h1>
+    <section className="card"><div className="stats" style={{ color: 'inherit' }}>
+      <div className="stat" style={{ background: 'var(--bg)' }}><b>{all.length}</b><span>已學項目</span></div>
+      <div className="stat" style={{ background: 'var(--bg)' }}><b>{S.streak}</b><span>連續天數</span></div>
+      <div className="stat" style={{ background: 'var(--bg)' }}><b>{dayKeys}</b><span>學習天數</span></div></div></section>
+    <section className="card"><label htmlFor="tg">目標記憶率</label><p className="sub" style={{ margin: '2px 0 8px' }}>越高記得越牢，但每天複習越多。</p>
+      <select id="tg" value={S.target} onChange={e => { S.target = +e.target.value; save(); bump(); }}>{[.85, .9, .95].map(v => <option key={v} value={v}>{v * 100}%</option>)}</select></section>
+    <section className="card"><h2>備份進度</h2><p className="sub">進度只存在這個瀏覽器。複製後可貼回來還原。</p>
+      <div className="row wrap"><button className="ghost" data-act="copy" onClick={copy}>複製進度</button><button className="ghost" data-act="restore" onClick={() => { ui.modal = { kind: 'restore' }; bump(); }}>貼上還原</button></div><div id="msg" className="note">{ui.msg}</div></section>
+    <a className="btn ghost" href="#about">關於 mojowu／資料來源</a>
+    <button className="ghost" style={{ borderColor: 'var(--red)', color: 'var(--red)' }} data-act="reset" onClick={() => { ui.modal = { kind: 'confirm', text: '確定清除所有學習進度？這個動作無法復原。', onOk: () => replaceState(defaultState()) }; bump(); }}>清除所有進度</button>
+  </>;
+}
