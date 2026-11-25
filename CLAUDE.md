@@ -16,6 +16,7 @@
 - **線上是 `app/`**（Vite + React + TS，v0.2.1，2026-11-25 起；見 `app/README.md`）。進度存 IndexedDB，localStorage `mojowu-v1` 為鏡像。**所有新功能做在 `app/`。**
 - **`public/index.html`（舊 MVP 單檔版）已不部署**，保留作為回退版本與 `app/test/parity.test.ts` 的對照；`public/data/` 仍是課程資料唯一來源。回退方法見 `docs/ARCHITECTURE.md` §1.6。
 - 內容只有 **N5**：79 漢字、718 單字、60 文法、10 單元。
+- `functions/`：Cloudflare Pages Functions（目前只有 `/api/event` 匿名事件），部署時 Pages 自動編譯。
 - 下一個里程碑：帳號與雲端同步（C）、新手引導等功能（E）（見 `docs/ROADMAP.md`）。
 
 ## 文件地圖
@@ -30,6 +31,7 @@
 | `docs/ROADMAP.md` | 三期路線、關卡、**待辦清單（從這裡挑工作）** |
 | `docs/RESEARCH.md` | 競品分析與 JLPT 官方規格摘要 |
 | `docs/DECISIONS.md` | 已做的技術與產品決策及理由 |
+| `docs/ANALYTICS.md` | 使用統計：Web Analytics、匿名學習事件、D1 設定與留存查詢 |
 | `ATTRIBUTION.md` | 資料來源與授權（CC BY 需標示） |
 
 ## 常用指令

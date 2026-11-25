@@ -7,6 +7,7 @@ import { KANA_ROWS, hiraToKata, isRight, isNear, isKanaRight } from '../lib/roma
 import { S, save, touchDay } from '../store/state';
 import { currentUnit, dueList, nextNew } from '../store/progress';
 import { ui, bump, type TestQ } from '../store/ui';
+import { track } from '../lib/track';
 
 const rnd = <T,>(a: T[]) => [...a].sort(() => Math.random() - .5);
 
@@ -74,8 +75,8 @@ export function advance() {
   const it = s.queue.shift() as QuizItem;
   if (s.kind !== 'kana' && !ui.answered.ok) s.queue.push(it); else s.done++;   // 答錯推回尾端，同回合答對才結束
   ui.answered = null; ui.nudge = null; ui.step++;
-  if (!s.queue.length && s.kind !== 'kana') touchDay(s.total);
-  if (!s.queue.length && s.kind === 'kana') { S.kana = Math.max(S.kana, s.score >= 8 ? 1 : 0); touchDay(1); }
+  if (!s.queue.length && s.kind !== 'kana') { touchDay(s.total); track(s.kind === 'lesson' ? 'lesson_done' : 'review_done', s.total); }
+  if (!s.queue.length && s.kind === 'kana') { S.kana = Math.max(S.kana, s.score >= 8 ? 1 : 0); touchDay(1); track('kana_done', s.score); }
   bump();
 }
 
@@ -100,7 +101,7 @@ export function testNext() {
         { name: '文法', n: res.filter(r => r.q.sec).length, got: res.filter(r => r.q.sec && r.ok).length },
       ], wrongs,
     };
-    touchDay(1); ui.session = null; ui.view = 'jlpt';
+    touchDay(1); track('test_done', res.filter(r => r.ok).length); ui.session = null; ui.view = 'jlpt';
   }
   bump();
 }

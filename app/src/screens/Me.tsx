@@ -1,5 +1,6 @@
 import { S, save, replaceState, defaultState, storage } from '../store/state';
 import { ui, bump } from '../store/ui';
+import { analyticsOn, setAnalytics } from '../lib/track';
 
 export function Me() {
   const all = Object.values(S.cards), dayKeys = Object.keys(S.log).length;
@@ -15,6 +16,8 @@ export function Me() {
       <select id="tg" value={S.target} onChange={e => { S.target = +e.target.value; save(); bump(); }}>{[.85, .9, .95].map(v => <option key={v} value={v}>{v * 100}%</option>)}</select></section>
     <section className="card"><h2>備份進度</h2><p className="sub">進度只存在這個瀏覽器{storage.backend === 'indexedDB' ? '（IndexedDB）' : ''}。複製後可貼回來還原。</p>
       <div className="row wrap"><button className="ghost" data-act="copy" onClick={copy}>複製進度</button><button className="ghost" data-act="restore" onClick={() => { ui.modal = { kind: 'restore' }; bump(); }}>貼上還原</button></div><div id="msg" className="note">{ui.msg}</div></section>
+    <section className="card"><label className="row between" style={{ fontWeight: 400 }}><span><b>傳送匿名使用統計</b><br /><span className="sub">只記「上完一課」這類事件與隨機代號，用來改善課程。不含個人資料。</span></span>
+      <input type="checkbox" id="an" style={{ width: 24, height: 24, flex: 'none' }} checked={analyticsOn()} onChange={e => { setAnalytics(e.target.checked); bump(); }} /></label></section>
     <a className="btn ghost" href="#about">關於 mojowu／資料來源</a>
     <button className="ghost" style={{ borderColor: 'var(--red)', color: 'var(--red)' }} data-act="reset" onClick={() => { ui.modal = { kind: 'confirm', text: '確定清除所有學習進度？這個動作無法復原。', onOk: () => replaceState(defaultState()) }; bump(); }}>清除所有進度</button>
   </>;
