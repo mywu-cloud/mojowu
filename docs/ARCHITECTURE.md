@@ -64,6 +64,7 @@ hash 路由：`#home #path #review #jlpt #me #kana`。學習回合（`session`�
 - 狀態模型、localStorage key、hash 路由、回合規則都與 MVP 相同；畫面狀態放 `store/ui.ts`，改完呼叫 `bump()`，元件用 `useUi()`（`useSyncExternalStore`）訂閱。之後要換成 Zustand 等也只動這一檔。
 - 課程資料仍只有 `public/data/n5.json` 一份，build 前同步進 `app/public/`。
 - `test/parity.test.ts` 直接執行 `public/index.html` 內的函式做對照，確保移植零行為差異。
+- **儲存（B3）**：IndexedDB `mojowu` v1（`cards`：key＝項目 ID；`meta`：target、streak、lastDay、log、kana、savedAt、migratedFrom）。`save()` 同步寫 localStorage 鏡像（`mojowu-v1`＋`mojowu-v1-savedAt`），再合併排入 IndexedDB 交易、只寫有變動的卡片。啟動 `initState()`：IndexedDB 空而 localStorage 有資料＝從 MVP 遷移；兩邊都有則取 savedAt 較新者並補寫另一邊；沒有 IndexedDB 時退回只用 localStorage。`navigator.storage.persist()` 降低被瀏覽器清除的機率。
 
 ## 2. 目標架構（正式版）
 

@@ -62,7 +62,7 @@ async def main():
         await pg.goto(URL + "#path"); await pg.wait_for_timeout(300)
         if "建議兩週" not in await pg.inner_text("#main"): errs.append("unit 2 heavy hint missing")
         await pg.screenshot(path=SHOT + "_path.png")
-        await pg.evaluate("() => { const s=JSON.parse(localStorage.getItem('mojowu-v1')); for (const c of Object.values(s.cards)) c.due=0; localStorage.setItem('mojowu-v1', JSON.stringify(s)); }")
+        await pg.evaluate("() => { const s=JSON.parse(localStorage.getItem('mojowu-v1')); for (const c of Object.values(s.cards)) c.due=0; localStorage.setItem('mojowu-v1', JSON.stringify(s)); localStorage.setItem('mojowu-v1-savedAt', String(Date.now() + 1e7)); }")
         await pg.goto(URL + "#review"); await pg.reload(); await pg.wait_for_timeout(300)
         await pg.click("[data-act=review]")
         await pg.screenshot(path=SHOT + "_review.png")

@@ -63,7 +63,7 @@ python3 scripts/build_xlsx.py content/n5.json content/N5_content.xlsx
 
 1. **UI 文字一律繁體中文（台灣用語）**；日文用 `Noto Serif JP`，介面用 `Noto Sans TC`。
 2. **改了 `public/index.html` 或 `public/data/*` 必須調高 `public/sw.js` 的 `VERSION`**，否則使用者會一直拿到舊快取。`app/` 則調高 `app/public/sw.js`。
-3. **不要改 localStorage 的 key（`mojowu-v1`）或 `S` 的欄位意義**而不寫遷移；封測者的進度只存在他們手機上。
+3. **不要改 localStorage 的 key（`mojowu-v1`）或 `S` 的欄位意義**而不寫遷移；封測者的進度只存在他們手機上。app/ 的進度存在 IndexedDB `mojowu`（localStorage 為鏡像），改資料表要調高 `DB_VERSION` 並依 oldVersion 逐步遷移（`app/src/store/db.ts`）。
 4. **內容 ID 永遠不可重用或改號**（`k001`、`v0001`、`g01`），使用者卡片以 ID 對應。新增內容往後編號。
 5. **資料來源授權**：不得使用 WaniKani 的部件名稱與記憶口訣（有著作權）；JLPT 官方考題不得收錄。新資料來源先寫進 `ATTRIBUTION.md`。
 6. MVP：所有使用者看得到的資料字串都要經過 `esc()` 再塞進 HTML。app：交給 React 跳脫，不准用 `dangerouslySetInnerHTML`。

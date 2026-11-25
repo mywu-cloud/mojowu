@@ -28,7 +28,7 @@ MVP 沒有後端，這些數字目前無法收集 → 待辦 A3。
 
 - [x] B1 建 `app/`：Vite + React + TS，依 `docs/ARCHITECTURE.md` §3 拆模組，功能與 MVP 對等（2026-11-25；e2e 與 MVP 共用、vitest 對照 MVP 函式一致）
 - [x] B2 單元測試：romaji、answer matching、FSRS（以現行公式做回歸）、解鎖（2026-11-25，`app/test/`，70 項；含用真實 N5 資料驗證每個正解都能答對、學習回合規則）
-- [ ] B3 localStorage `mojowu-v1` → IndexedDB 遷移
+- [x] B3 localStorage `mojowu-v1` → IndexedDB 遷移（2026-11-25，app/；localStorage 保留為同步鏡像，見 DECISIONS 16）
 - [x] B4 GitHub Actions：PR 跑測試；資料 JSON schema 驗證（2026-11-25，`.github/workflows/ci.yml`：資料驗證＋ID 對照上一版、app 單元測試與建置、MVP 與 app 的 e2e）
 - [ ] B5 Pages 改用建置（`npm run build` → `app/dist`）——改部署設定前先告知 MY
 

@@ -88,6 +88,8 @@ jobs:
           (cd app/dist && python -m http.server 8770 >/dev/null 2>&1 &)
           sleep 1
           python tests/e2e.py http://localhost:8770/index.html /tmp/app
+      - name: app 進度遷移（localStorage → IndexedDB）
+        run: python tests/migrate_e2e.py http://localhost:8770/index.html
       - uses: actions/upload-artifact@v4
         if: always()
         with:
