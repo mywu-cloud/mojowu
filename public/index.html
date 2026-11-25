@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mojowu・日語學習</title>
+<meta name="theme-color" content="#C23B22">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+JP:wght@500;700&display=swap">
+<style>
+/* VOICE: calm, encouraging study companion
+   IDEA: a Japanese study notebook (和紙 page, 朱印 stamp)
+   PICTURE: the working app itself, today card first
+   COLOUR+TYPE: washi off-white, vermilion accent, indigo support; Noto Serif JP for Japanese, Noto Sans TC for UI
+   LAYOUT: phone column ≤ 480px, bottom tab bar, centred on wide screens */
+:root{color-scheme:light dark;--bg:light-dark(#F7F3EA,#17140F);--card:light-dark(#FFFFFF,#221E18);--line:light-dark(#E6DED0,#3A342B);--ink:light-dark(#1F1B16,#F1ECE2);--mute:light-dark(#6B645A,#B3AA9B);--red:light-dark(#C23B22,#E2664D);--redink:light-dark(#A12F1A,#F08A74);--blue:light-dark(#2F4A7A,#8FB0E8);--gold:light-dark(#B07A1E,#E0B25C);--ok:light-dark(#2E6A40,#7CC795);--okbg:light-dark(#E7F1E9,#1D3324);--badbg:light-dark(#FBEAE6,#3A2019);--soft:light-dark(#EFE8DA,#2E2920)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 'Noto Sans TC',system-ui,sans-serif;overflow-x:clip}
+.jp{font-family:'Noto Serif JP','Hiragino Mincho ProN',serif}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+main{flex:1;padding:24px 18px 110px;display:flex;flex-direction:column;gap:14px}
+h1{font:700 28px/1.2 'Noto Serif JP',serif;margin:0}
+h2{font-size:17px;margin:0}
+.sub{color:var(--mute);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+.hero{background:light-dark(#C23B22,#9E2F1A);color:#fff;border:0;border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{background:rgba(255,255,255,.16);border-radius:12px;padding:10px}.stat b{display:block;font-size:24px;line-height:1.2}.stat span{font-size:13px}
+button,.btn{font:inherit;min-height:48px;border-radius:14px;border:0;padding:0 18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.primary{background:var(--red);color:#fff}.light{background:#fff;color:#A12F1A}.ghost{background:transparent;border:1.5px solid var(--blue);color:var(--blue)}.indigo{background:var(--blue);color:#fff}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+button:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}.wrap{flex-wrap:wrap}
+.rings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;text-align:center}
+.rings small{color:var(--mute);display:block}
+.rings>div{display:flex;flex-direction:column;align-items:center;gap:2px}
+.pill{font-size:13px;border-radius:999px;padding:3px 10px;background:var(--soft);color:var(--mute);white-space:nowrap}
+.pill.red{background:var(--badbg);color:var(--redink);font-weight:700}.pill.blue{background:var(--blue);color:#fff}
+.unit{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:var(--card);width:100%;text-align:left;color:inherit;font-weight:400;min-height:64px}
+.unit.locked{background:transparent;border-style:dashed;cursor:not-allowed}
+.dot{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:var(--soft);color:var(--mute)}
+.dot.done{background:var(--blue);color:#fff}.dot.now{background:var(--red);color:#fff}
+.bar{height:8px;background:var(--soft);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--red);border-radius:4px}
+.big{font-size:96px;line-height:1.05;font-weight:700;text-align:center}
+.read{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.read div{background:var(--bg);border-radius:12px;padding:10px 12px}.read b{color:var(--blue);font-size:20px}
+.warn{background:light-dark(#FFF6E5,#33280F);border:1px solid light-dark(#EBD3A3,#5C4A22);border-radius:14px;padding:10px 12px;font-size:14px}
+label{font-size:14px;font-weight:700}
+input[type=text]{width:100%;height:56px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);padding:0 16px;font:20px 'Noto Serif JP',serif}
+select{font:inherit;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:0 10px}
+.fb{border-radius:14px;padding:12px 14px}.fb.ok{background:var(--okbg);color:var(--ok)}.fb.bad{background:var(--badbg)}.fb.bad b{color:var(--redink)}
+.choices{display:grid;gap:10px}.choice{background:var(--card);border:1.5px solid var(--line);color:var(--ink);justify-content:flex-start;text-align:left;font-weight:500;padding:10px 14px}
+.choice.right{border-color:var(--ok);background:var(--okbg)}.choice.wrong{border-color:var(--red);background:var(--badbg)}
+.kana{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.kana div{background:var(--card);border:1px solid var(--line);border-radius:10px;text-align:center;padding:6px 0}.kana b{display:block;font:700 22px 'Noto Serif JP',serif}.kana small{color:var(--mute)}
+.top{display:flex;align-items:center;gap:12px}.top .bar{flex:1}
+.x{min-height:44px;width:44px;padding:0;background:transparent;color:var(--mute)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:6px 4px calc(10px + env(safe-area-inset-bottom))}
+nav a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;color:var(--mute);text-decoration:none;min-height:48px;justify-content:center;border-radius:10px}
+nav a[aria-current=page]{color:var(--red);font-weight:700}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2}
+.stamp{width:86px;height:86px;border-radius:50%;border:3px solid var(--red);color:var(--red);display:grid;place-items:center;transform:rotate(-8deg);font:700 22px 'Noto Serif JP',serif;flex:none}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;align-items:end;height:90px}
+.days div{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;height:100%;font-size:12px;color:var(--mute)}.days i{display:block;width:70%;background:var(--blue);border-radius:4px 4px 0 0;min-height:2px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:20px;z-index:9}
+.modal .card{max-width:380px;width:100%}
+.note{font-size:13px;color:var(--mute)}
+@media (prefers-reduced-motion:no-preference){.pop{animation:pop .35s ease-out}@keyframes pop{from{transform:scale(.96);opacity:.4}to{transform:none;opacity:1}}}
+</style>
+</head>
+<body>
+<div class="app">
+<main id="main" aria-live="polite"></main>
+<nav aria-label="主選單" id="nav">
+<a href="#home" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>首頁</a>
+<a href="#path" data-v="path"><svg viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h6a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h6"/></svg>路徑</a>
+<a href="#review" data-v="review"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="14" height="16" rx="2"/><path d="M8 3h12v14"/></svg>複習</a>
+<a href="#jlpt" data-v="jlpt"><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>JLPT</a>
+<a href="#me" data-v="me"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>我的</a>
+</nav>
+</div>
+<div id="modal"></div>
+<script>
+fetch('data/n5.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(RAW => {
+const DAY = 864e5, NOW = () => Date.now();
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = s => document.querySelector(s);
+
+/* ---------- content ---------- */
+const UNITS = RAW.u.map(([n, t]) => ({n, t}));
+const ITEMS = {};
+const K = RAW.k.map(([id, ch, unit, trad, zh, on, kun]) => ITEMS[id] = {id, type:'k', unit, ch, trad, zh, on, kun});
+const V = RAW.v.map(([id, unit, ex, rd, zh, req, ff]) => ITEMS[id] = {id, type:'v', unit, ex, rd, zh, req, ff});
+const G = RAW.g.map(([id, unit, pat, zh, jp, tr]) => ITEMS[id] = {id, type:'g', unit, pat, zh, jp, tr});
+
+/* ---------- kana + romaji ---------- */
+const KANA_ROWS = [['あいうえお','a i u e o'],['かきくけこ','ka ki ku ke ko'],['さしすせそ','sa shi su se so'],['たちつてと','ta chi tsu te to'],['なにぬねの','na ni nu ne no'],['はひふへほ','ha hi fu he ho'],['まみむめも','ma mi mu me mo'],['や　ゆ　よ','ya - yu - yo'],['らりるれろ','ra ri ru re ro'],['わ　　　を','wa - - - wo'],['ん　　　　','n - - - -']];
+const ALT = {shi:['si'],chi:['ti'],tsu:['tu'],fu:['hu'],wo:['o']};
+const R2K = {a:'あ',i:'い',u:'う',e:'え',o:'お',ka:'か',ki:'き',ku:'く',ke:'け',ko:'こ',sa:'さ',shi:'し',si:'し',su:'す',se:'せ',so:'そ',ta:'た',chi:'ち',ti:'ち',tsu:'つ',tu:'つ',te:'て',to:'と',na:'な',ni:'に',nu:'ぬ',ne:'ね',no:'の',ha:'は',hi:'ひ',fu:'ふ',hu:'ふ',he:'へ',ho:'ほ',ma:'ま',mi:'み',mu:'む',me:'め',mo:'も',ya:'や',yu:'ゆ',yo:'よ',ra:'ら',ri:'り',ru:'る',re:'れ',ro:'ろ',wa:'わ',wo:'を',ga:'が',gi:'ぎ',gu:'ぐ',ge:'げ',go:'ご',za:'ざ',ji:'じ',zi:'じ',zu:'ず',ze:'ぜ',zo:'ぞ',da:'だ',di:'ぢ',du:'づ',de:'で',do:'ど',ba:'ば',bi:'び',bu:'ぶ',be:'べ',bo:'ぼ',pa:'ぱ',pi:'ぴ',pu:'ぷ',pe:'ぺ',po:'ぽ',kya:'きゃ',kyu:'きゅ',kyo:'きょ',sha:'しゃ',shu:'しゅ',sho:'しょ',sya:'しゃ',syu:'しゅ',syo:'しょ',cha:'ちゃ',chu:'ちゅ',cho:'ちょ',tya:'ちゃ',tyu:'ちゅ',tyo:'ちょ',nya:'にゃ',nyu:'にゅ',nyo:'にょ',hya:'ひゃ',hyu:'ひゅ',hyo:'ひょ',mya:'みゃ',myu:'みゅ',myo:'みょ',rya:'りゃ',ryu:'りゅ',ryo:'りょ',gya:'ぎゃ',gyu:'ぎゅ',gyo:'ぎょ',ja:'じゃ',ju:'じゅ',jo:'じょ',jya:'じゃ',jyu:'じゅ',jyo:'じょ',bya:'びゃ',byu:'びゅ',byo:'びょ',pya:'ぴゃ',pyu:'ぴゅ',pyo:'ぴょ',fa:'ふぁ',fi:'ふぃ',fe:'ふぇ',fo:'ふぉ',ti2:'てぃ',di2:'でぃ',xtu:'っ','-':'ー'};
+function toHira(input){
+  const s = input.toLowerCase(); let out = '';
+  for (let i = 0; i < s.length;) {
+    const c = s[i];
+    if (!/[a-z\-]/.test(c)) { out += c; i++; continue; }
+    if (c === 'n' && s[i+1] === 'n') { out += 'ん'; i += /[aiueoy]/.test(s[i+2] || '') ? 1 : 2; continue; }
+    if (c === 'n' && (i + 1 === s.length || !/[aiueoy]/.test(s[i+1]))) { out += 'ん'; i++; continue; }
+    if (c === s[i+1] && /[bcdfghjkmpqrstvwxz]/.test(c)) { out += 'っ'; i++; continue; }
+    let hit = false;
+    for (const L of [3, 2, 1]) { const p = s.substr(i, L); if (R2K[p]) { out += R2K[p]; i += L; hit = true; break; } }
+    if (!hit) { out += c; i++; }
+  }
+  return out;
+}
+const kataToHira = s => s.replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+const norm = s => kataToHira(toHira(String(s).trim())).replace(/[\s～〜\.\-・]/g, '').replace(/ー/g, 'ー');
+function answersFor(it){
+  if (it.type === 'v') return it.rd.split(';').map(x => x.replace(/\(.*?\)|（.*?）/g, '').trim()).filter(Boolean);
+  if (it.type === 'k') return [...it.on, ...it.kun.map(x => x.split('.')[0])].map(x => x.replace(/-/g, ''));
+  return [];
+}
+const isRight = (it, typed) => { const t = norm(typed); return t && answersFor(it).some(a => norm(a) === t); };
+
+/* ---------- FSRS-4.5 (default weights) ---------- */
+const W = [0.4872,1.4003,3.7145,13.8206,5.1618,1.2298,0.8975,0.031,1.6474,0.1367,1.0461,2.1072,0.0793,0.3246,1.587,0.2272,2.8755];
+const DECAY = -0.5, FACTOR = 19/81;
+const clampD = d => Math.min(10, Math.max(1, d));
+const d0 = g => clampD(W[4] - (g - 3) * W[5]);
+const retr = (t, s) => Math.pow(1 + FACTOR * t / s, DECAY);
+const ivl = (s, r) => Math.max(1, Math.round(s / FACTOR * (Math.pow(r, 1 / DECAY) - 1)));
+function schedule(card, good){
+  const g = good ? 3 : 1, now = NOW();
+  if (!card.reps) {
+    card.s = W[g - 1]; card.d = d0(g);
+  } else {
+    const t = Math.max(0, (now - card.last) / DAY), r = retr(t, card.s);
+    card.d = clampD(W[7] * d0(3) + (1 - W[7]) * (card.d - W[6] * (g - 3)));
+    card.s = good
+      ? card.s * (Math.exp(W[8]) * (11 - card.d) * Math.pow(card.s, -W[9]) * (Math.exp(W[10] * (1 - r)) - 1) + 1)
+      : W[11] * Math.pow(card.d, -W[12]) * (Math.pow(card.s + 1, W[13]) - 1) * Math.exp(W[14] * (1 - r));
+    if (!good) card.lapses = (card.lapses || 0) + 1;
+  }
+  card.reps = (card.reps || 0) + 1; card.last = now; card.ok = good;
+  card.due = good ? now + ivl(card.s, S.target) * DAY : now + 10 * 60e3;
+}
+
+/* ---------- state ---------- */
+const KEY = 'mojowu-v1';
+let S = {cards:{}, target:0.9, streak:0, lastDay:'', log:{}, kana:0};
+try { const v = JSON.parse(localStorage.getItem(KEY) || 'null'); if (v && v.cards) S = Object.assign(S, v); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+const today = () => new Date().toLocaleDateString('sv');
+function touchDay(n = 1){
+  const t = today();
+  if (S.lastDay !== t) {
+    const y = new Date(NOW() - DAY).toLocaleDateString('sv');
+    S.streak = S.lastDay === y ? S.streak + 1 : 1; S.lastDay = t;
+  }
+  S.log[t] = (S.log[t] || 0) + n; save();
+}
+const learned = id => !!S.cards[id];
+const kanjiReady = id => S.cards[id] && S.cards[id].ok;
+const available = it => it.type !== 'v' || it.req.every(kanjiReady);
+const unitItems = n => [...K, ...V, ...G].filter(it => it.unit === n);
+const unitDone = n => unitItems(n).every(it => learned(it.id));
+const currentUnit = () => (UNITS.find(u => !unitDone(u.n)) || UNITS.at(-1)).n;
+const unitOpen = n => n === 1 || unitDone(n - 1);
+function nextNew(n, max = 5){
+  const items = unitItems(n).filter(it => !learned(it.id) && available(it));
+  const order = {k:0, v:1, g:2};
+  return items.sort((a, b) => order[a.type] - order[b.type]).slice(0, max);
+}
+const dueList = () => Object.entries(S.cards).filter(([, c]) => c.due <= NOW()).map(([id]) => ITEMS[id]).filter(Boolean);
+const count = (arr) => arr.filter(it => learned(it.id)).length;
+
+/* ---------- speech ---------- */
+function speak(text){ try { const u = new SpeechSynthesisUtterance(text); u.lang = 'ja-JP'; u.rate = .9; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }
+const sayBtn = t => `<button class="x" data-say="${esc(t)}" aria-label="播放發音"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg></button>`;
+
+/* ---------- views ---------- */
+let view = 'home', session = null;
+const ring = (pct, color, label) => `<svg width="74" height="74" viewBox="0 0 74 74" role="img" aria-label="${label} ${pct}%"><circle cx="37" cy="37" r="30" fill="none" stroke="var(--soft)" stroke-width="7"/><circle cx="37" cy="37" r="30" fill="none" stroke="${color}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(188.5*pct/100).toFixed(1)} 188.5" transform="rotate(-90 37 37)"/><text x="37" y="42" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor">${pct}%</text></svg>`;
+
+function home(){
+  const due = dueList().length, u = currentUnit(), nw = nextNew(u).length;
+  const mins = Math.max(1, Math.round(due * 0.25 + nw * 1.2));
+  const pk = count(K), pv = count(V), pg = count(G);
+  const wd = new Date().toLocaleDateString('zh-TW', {month:'long', day:'numeric', weekday:'long'});
+  const word = V[Math.floor(Date.parse(today()) / DAY) % V.length];
+  return `<div class="row between"><div><div style="font-weight:700;color:var(--red);letter-spacing:.02em">mojowu</div><div class="sub">${esc(wd)}</div><h1>${new Date().getHours() < 11 ? 'おはよう' : new Date().getHours() < 18 ? 'こんにちは' : 'こんばんは'}</h1></div>
+    <span class="pill red">連續 ${S.lastDay === today() || S.lastDay === new Date(NOW()-DAY).toLocaleDateString('sv') ? S.streak : 0} 天</span></div>
+  <section class="hero pop"><div class="row between"><h2>今日任務</h2><span style="font-size:14px">N5・第 ${u} 單元</span></div>
+    <div class="stats"><div class="stat"><b>${due}</b><span>張到期複習</span></div><div class="stat"><b>${nw}</b><span>項新內容</span></div><div class="stat"><b>${mins}</b><span>分鐘左右</span></div></div>
+    <button class="light" data-act="${due ? 'review' : 'lesson'}">${due ? '先複習到期的卡' : nw ? '開始新課' : '本單元已學完'}</button>
+    ${due && nw ? `<button class="light" style="background:rgba(255,255,255,.16);color:#fff" data-act="lesson">直接上新課</button>` : ''}</section>
+  ${S.kana < 1 ? `<button class="ghost" data-go="kana">還不熟五十音？先做假名練習</button>` : ''}
+  <section class="card"><h2 style="margin-bottom:10px">N5 三軌進度</h2><div class="rings">
+    <div>${ring(Math.round(pk/K.length*100), 'var(--red)', '漢字')}<b>文字・漢字</b><small>${pk} / ${K.length}</small></div>
+    <div>${ring(Math.round(pv/V.length*100), 'var(--blue)', '語彙')}<b>語彙</b><small>${pv} / ${V.length}</small></div>
+    <div>${ring(Math.round(pg/G.length*100), 'var(--gold)', '文法')}<b>文法</b><small>${pg} / ${G.length}</small></div></div></section>
+  <section class="card"><div class="row between"><span class="sub">今日一字</span>${sayBtn(word.rd.split(';')[0])}</div>
+    <div class="row"><span class="jp" style="font-size:40px;font-weight:700">${esc(word.ex.split(';')[0])}</span><span>${esc(word.rd)}・${esc(word.zh)}</span></div>
+    ${word.ff ? `<div class="warn">${esc(word.ff)}</div>` : ''}</section>`;
+}
+
+function path(){
+  const cu = currentUnit();
+  const kanaRow = `<button class="unit" data-go="kana"><span class="dot ${S.kana >= 1 ? 'done' : 'now'}">あ</span><span style="flex:1"><b>入門・五十音</b><br><span class="sub">平假名、片假名辨識練習</span></span></button>`;
+  const rows = UNITS.map(u => {
+    const items = unitItems(u.n), got = count(items), open = unitOpen(u.n), done = got === items.length;
+    const k = items.filter(i => i.type === 'k').length, v = items.filter(i => i.type === 'v').length, g = items.filter(i => i.type === 'g').length;
+    return `<button class="unit ${open ? '' : 'locked'}" ${open ? `data-unit="${u.n}"` : 'disabled'} aria-label="第 ${u.n} 單元 ${esc(u.t)}${open ? '' : '，尚未解鎖'}">
+      <span class="dot ${done ? 'done' : u.n === cu ? 'now' : ''}">${u.n}</span>
+      <span style="flex:1"><span class="row between"><b>${esc(u.t)}</b><span class="sub">${got}/${items.length}</span></span>
+      <span class="sub">${k} 漢字・${v} 單字・${g} 文法</span>${open && !done ? `<span class="bar" style="margin-top:6px"><i style="width:${got/items.length*100}%"></i></span>` : ''}</span></button>`;
+  }).join('');
+  return `<h1>學習路徑</h1><p class="sub" style="margin:0">N5 十個單元。漢字答對後才解鎖含該字的單字；學完一單元開下一單元。</p>${kanaRow}${rows}
+  <p class="note">N4–N1 將依相同結構陸續加入。</p>`;
+}
+
+function reviewTab(){
+  const due = dueList(), all = Object.values(S.cards);
+  const days = [...Array(7)].map((_, i) => { const end = NOW() + (i + 1) * DAY; return all.filter(c => c.due > NOW() + i * DAY && c.due <= end).length; });
+  const mx = Math.max(1, ...days);
+  return `<h1>複習</h1><section class="card"><div class="row between"><div><b style="font-size:36px">${due.length}</b> <span class="sub">張現在到期</span></div>
+    <button class="indigo" data-act="review" ${due.length ? '' : 'disabled'}>開始複習</button></div></section>
+  <section class="card"><h2>未來 7 天到期</h2><div class="days" style="margin-top:10px">${days.map((d, i) => `<div><span>${d}</span><i style="height:${d/mx*60}px"></i><span>${i ? '+' + (i+1) : '明天'}</span></div>`).join('')}</div></section>
+  <p class="note">排程採 FSRS-4.5 演算法，目標記憶率 ${Math.round(S.target*100)}%（可在「我的」調整）。答錯的卡 10 分鐘後會再出現，不扣分。</p>`;
+}
+
+let testRes = null;
+function jlpt(){
+  if (testRes) {
+    const {sec, wrongs} = testRes, tot = sec.reduce((a, s) => a + s.got, 0), max = sec.reduce((a, s) => a + s.n, 0);
+    return `<h1>練習測驗結果</h1><section class="card row"><div style="flex:1"><span class="sub">答對</span><div><b style="font-size:44px">${tot}</b> / ${max}</div><span class="sub">正確率 ${Math.round(tot/max*100)}%</span></div><div class="stamp">${tot/max >= .6 ? '良好' : '加油'}</div></section>
+    <section class="card">${sec.map(s => `<div style="margin-bottom:12px"><div class="row between"><span>${s.name}</span><b>${s.got} / ${s.n}</b></div><div class="bar"><i style="width:${s.got/s.n*100}%;background:var(--blue)"></i></div></div>`).join('')}</section>
+    ${wrongs.length ? `<section class="card"><h2>錯題已加入複習牌組</h2>${wrongs.map(w => `<div class="row between" style="margin-top:8px"><span class="jp">${esc(w.q)}</span><span class="sub">${esc(w.a)}</span></div>`).join('')}</section>` : ''}
+    <button class="primary" data-act="retest">再測一次</button>
+    <p class="note">這是依 N5 範圍出題的練習，不是官方換算分數。正式 JLPT 為 180 分制、各分項有最低分。</p>`;
+  }
+  return `<h1>JLPT 練習</h1><section class="card"><h2>N5 小測驗・15 題</h2><p class="sub">漢字讀音 6 題、語彙意思 5 題、文法 4 題。錯題會自動變成複習卡。</p><button class="primary" data-act="test">開始測驗</button></section>
+  <section class="card"><h2>正式考試的合格條件</h2><p class="sub" style="margin:4px 0 0">N5 總分 180 分需 80 分；「語言知識・讀解」120 分中需 38 分，「聽解」60 分中需 19 分。</p></section>`;
+}
+
+function me(){
+  const all = Object.values(S.cards), dayKeys = Object.keys(S.log).length;
+  return `<h1>我的</h1><section class="card"><div class="stats" style="color:inherit">
+    <div class="stat" style="background:var(--bg)"><b>${all.length}</b><span>已學項目</span></div>
+    <div class="stat" style="background:var(--bg)"><b>${S.streak}</b><span>連續天數</span></div>
+    <div class="stat" style="background:var(--bg)"><b>${dayKeys}</b><span>學習天數</span></div></div></section>
+  <section class="card"><label for="tg">目標記憶率</label><p class="sub" style="margin:2px 0 8px">越高記得越牢，但每天複習越多。</p>
+    <select id="tg">${[.85, .9, .95].map(v => `<option value="${v}" ${S.target === v ? 'selected' : ''}>${v*100}%</option>`).join('')}</select></section>
+  <section class="card"><h2>備份進度</h2><p class="sub">進度只存在這個瀏覽器。複製後可貼回來還原。</p>
+    <div class="row wrap"><button class="ghost" data-act="copy">複製進度</button><button class="ghost" data-act="restore">貼上還原</button></div><div id="msg" class="note"></div></section>
+  <button class="ghost" style="border-color:var(--red);color:var(--red)" data-act="reset">清除所有進度</button>
+  <p class="note">資料來源：漢字 KANJIDIC（kanji-data, MIT）、單字 Tanos JLPT 清單（CC BY）。中文釋義與文法為本專案撰寫。</p>`;
+}
+
+/* ---------- study session (lesson / review / kana / test) ---------- */
+function startLesson(n){
+  const items = nextNew(n ?? currentUnit());
+  if (!items.length) { toast('這個單元目前沒有可學的新項目，先完成複習讓漢字解鎖單字。'); return; }
+  session = {kind:'lesson', learn:items, li:0, queue:[...items], first:{}, done:0, total:items.length};
+  render();
+}
+function startReview(){
+  const due = dueList(); if (!due.length) return;
+  session = {kind:'review', queue:due.slice(0, 30), first:{}, done:0, total:Math.min(30, due.length)}; render();
+}
+function startKana(){
+  const all = KANA_ROWS.flatMap(([k, r]) => [...k].map((c, i) => [c, r.split(' ')[i]])).filter(([c, r]) => r !== '-' && c.trim());
+  const kata = s => s.replace(/[ぁ-ゖ]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+  const pick = [...all].sort(() => Math.random() - .5).slice(0, 10).map(([c, r], i) => ({type:'kana', ch: i % 2 ? kata(c) : c, r}));
+  session = {kind:'kana', queue:pick, first:{}, done:0, total:10, score:0}; render();
+}
+function startTest(){
+  const rnd = a => [...a].sort(() => Math.random() - .5);
+  const distract = (pool, right, f) => [...new Set(rnd(pool).map(f).filter(x => x && x !== right))].slice(0, 3);
+  const qs = [];
+  rnd(K).slice(0, 6).forEach(k => { const right = k.on[0] || k.kun[0]; qs.push({sec:0, it:k, q:k.ch, prompt:'選出正確的讀音', right, opts:rnd([right, ...distract(K, right, x => x.on[0] || x.kun[0])])}); });
+  rnd(V.filter(v => v.ex !== v.rd)).slice(0, 5).forEach(v => qs.push({sec:0, it:v, q:v.ex.split(';')[0], prompt:'選出意思', right:v.zh, opts:rnd([v.zh, ...distract(V, v.zh, x => x.zh)])}));
+  rnd(G).slice(0, 4).forEach(g => qs.push({sec:1, it:g, q:g.tr, prompt:'選出正確的日文', right:g.jp, opts:rnd([g.jp, ...distract(G, g.jp, x => x.jp)])}));
+  session = {kind:'test', queue:qs, i:0, res:[], total:qs.length}; render();
+}
+
+function learnCard(it){
+  if (it.type === 'k') return `<div class="card pop" style="text-align:center"><span class="sub">新漢字・第 ${it.unit} 單元</span>
+    <div class="row" style="justify-content:center;gap:22px"><div class="big jp">${esc(it.ch)}</div>${it.trad !== it.ch ? `<div><div class="sub">繁體</div><div style="font-size:40px;color:var(--mute)">${esc(it.trad)}</div><span class="pill red">新字體</span></div>` : ''}</div>
+    <p class="sub">字義：${esc(it.zh)}。字義你已經會了，專心記讀音。</p></div>
+    <div class="read"><div><span class="sub">音讀</span><br><b>${esc(it.on.join('、') || '—')}</b></div><div><span class="sub">訓讀</span><br><b>${esc(it.kun.join('、') || '—')}</b></div></div>`;
+  if (it.type === 'v') return `<div class="card pop" style="text-align:center"><span class="sub">新單字・第 ${it.unit} 單元</span>
+    <div class="jp" style="font-size:52px;font-weight:700">${esc(it.ex)}</div><div class="row" style="justify-content:center">${esc(it.rd)} ${sayBtn(it.rd.split(';')[0])}</div><p style="font-size:20px;margin:6px 0 0">${esc(it.zh)}</p></div>
+    ${it.ff ? `<div class="warn"><b>和製漢語陷阱：</b>${esc(it.ff)}</div>` : ''}`;
+  return `<div class="card pop"><span class="sub">新文法・第 ${it.unit} 單元</span><div class="jp" style="font-size:26px;font-weight:700;margin:6px 0">${esc(it.pat)}</div><p style="margin:0">${esc(it.zh)}</p></div>
+    <div class="card"><div class="row between"><span class="jp" style="font-size:20px">${esc(it.jp)}</span>${sayBtn(it.jp)}</div><p class="sub" style="margin:4px 0 0">${esc(it.tr)}</p></div>`;
+}
+
+let answered = null;
+function quizCard(it){
+  if (it.type === 'g') {
+    if (!it._opts) it._opts = [it.jp, ...[...G].filter(x => x !== it).sort(() => Math.random() - .5).slice(0, 2).map(x => x.jp)].sort(() => Math.random() - .5);
+    return `<div class="card"><span class="pill">文法</span><p style="font-size:18px">「${esc(it.tr)}」用日文怎麼說？</p></div>
+      <div class="choices">${it._opts.map((o, i) => `<button class="choice jp ${answered ? (o === it.jp ? 'right' : answered.pick === i ? 'wrong' : '') : ''}" data-pick="${i}" ${answered ? 'disabled' : ''}>${esc(o)}</button>`).join('')}</div>`;
+  }
+  const hasK = it.type === 'v' && /[\u4e00-\u9fff]/.test(it.ex);
+  const q = it.type === 'kana' ? it.ch : it.type === 'k' ? it.ch : hasK ? it.ex.split(';')[0] : it.zh;
+  const ask = it.type === 'kana' ? '輸入羅馬拼音' : it.type === 'k' ? `輸入讀音（音讀或訓讀皆可）・${esc(it.zh)}` : hasK ? `輸入讀音・${esc(it.zh)}` : '用日文怎麼說？輸入假名';
+  return `<div class="card" style="text-align:center"><span class="pill">${it.type === 'kana' ? '假名' : it.type === 'k' ? '漢字' : '單字'}</span>
+    <div class="jp" style="font-size:${q.length > 4 ? 44 : 72}px;font-weight:700;line-height:1.3">${esc(q)}</div><p class="sub" style="margin:0">${ask}</p></div>
+    <form id="af"><label for="ans">${it.type === 'kana' ? '例：ka' : '可直接打羅馬字，會自動轉成假名'}</label>
+    <input type="text" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" ${answered ? 'disabled' : ''} value="${answered ? esc(answered.typed) : ''}">
+    <div id="pv" class="note jp" style="min-height:20px"></div></form>`;
+}
+function feedback(it){
+  if (!answered) return '';
+  if (answered.ok) return `<div class="fb ok pop"><b>答對了！</b> ${it.type === 'kana' ? esc(it.r) : it.type === 'g' ? '' : esc(answersFor(it).join('、'))}</div>`;
+  const right = it.type === 'kana' ? it.r : it.type === 'g' ? it.jp : answersFor(it).join('、');
+  return `<div class="fb bad pop"><b>正解：</b><span class="jp">${esc(right)}</span>${it.ff ? `<div style="margin-top:4px">${esc(it.ff)}</div>` : ''}<div class="note" style="margin-top:4px">${session.kind === 'kana' ? '' : '這張卡等一下會再出現一次，不扣分。'}</div></div>`;
+}
+
+function sessionView(){
+  const s = session;
+  if (s.kind === 'test') {
+    const q = s.queue[s.i];
+    return `<div class="top"><button class="x" data-act="quit" aria-label="離開"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="bar"><i style="width:${s.i/s.total*100}%;background:var(--blue)"></i></div><span class="sub">${s.i+1}/${s.total}</span></div>
+      <div class="card" style="text-align:center"><span class="pill">${q.sec ? '文法' : '文字・語彙'}</span><div class="jp" style="font-size:${q.q.length > 6 ? 22 : 48}px;font-weight:700">${esc(q.q)}</div><p class="sub" style="margin:0">${q.prompt}</p></div>
+      <div class="choices">${q.opts.map((o, i) => `<button class="choice jp ${answered ? (o === q.right ? 'right' : answered.pick === i ? 'wrong' : '') : ''}" data-tpick="${i}" ${answered ? 'disabled' : ''}>${esc(o)}</button>`).join('')}</div>
+      ${answered ? `<button class="indigo" data-act="tnext">${s.i + 1 < s.total ? '下一題' : '看結果'}</button>` : ''}`;
+  }
+  const head = `<div class="top"><button class="x" data-act="quit" aria-label="離開"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="bar"><i style="width:${s.done/s.total*100}%"></i></div><span class="sub">${s.done}/${s.total}</span></div>`;
+  if (s.kind === 'lesson' && s.li < s.learn.length) {
+    return head + learnCard(s.learn[s.li]) + `<div style="flex:1"></div><button class="primary" data-act="lnext">${s.li + 1 < s.learn.length ? '記住了，下一個' : '開始小測驗'}</button>`;
+  }
+  if (!s.queue.length) return finishView();
+  const it = s.queue[0];
+  return head + quizCard(it) + feedback(it) + `<div style="flex:1"></div>` +
+    (answered ? `<button class="indigo" data-act="next">繼續</button>` : it.type === 'g' ? '' : `<button class="indigo" data-act="check">確認答案</button>`);
+}
+function finishView(){
+  const s = session;
+  if (s.kind === 'kana') return `<div class="card" style="text-align:center"><div class="stamp" style="margin:0 auto">${s.score}/10</div><h2 style="margin-top:12px">假名練習完成</h2><p class="sub">答對 8 題以上，表示可以開始 N5 第 1 單元。</p></div><button class="primary" data-act="kanaagain">再練一次</button><button class="ghost" data-act="quit">回首頁</button>`;
+  const right = Object.values(s.first).filter(Boolean).length;
+  return `<div class="card pop" style="text-align:center"><div class="stamp" style="margin:0 auto">完成</div><h2 style="margin-top:12px">${s.kind === 'lesson' ? '新課完成' : '複習完成'}</h2>
+    <p class="sub">${s.total} 項中第一次就答對 ${right} 項。連續 ${S.streak} 天。</p></div>
+    ${nextNew(currentUnit()).length ? `<button class="primary" data-act="lesson">再上一課</button>` : ''}<button class="ghost" data-act="quit">回首頁</button>`;
+}
+
+function grade(ok, typed, pick){
+  const s = session, it = s.queue[0];
+  answered = {ok, typed, pick};
+  if (s.kind === 'kana') { if (ok) s.score++; render(); return; }
+  if (!(it.id in s.first)) {
+    s.first[it.id] = ok;
+    if (!S.cards[it.id]) S.cards[it.id] = {};
+    schedule(S.cards[it.id], ok); save();
+  }
+  render();
+}
+function advance(){
+  const s = session, it = s.queue.shift();
+  if (s.kind !== 'kana' && !answered.ok) s.queue.push(it); else s.done++;
+  answered = null;
+  if (!s.queue.length && s.kind !== 'kana') touchDay(s.total);
+  if (!s.queue.length && s.kind === 'kana') { S.kana = Math.max(S.kana, s.score >= 8 ? 1 : 0); touchDay(1); }
+  render();
+}
+
+/* ---------- shell ---------- */
+function render(){
+  const m = $('#main');
+  m.innerHTML = session ? sessionView() : ({home, path, review:reviewTab, jlpt, me, kana:kanaView}[view] || home)();
+  $('#nav').style.display = session ? 'none' : '';
+  document.querySelectorAll('nav a').forEach(a => { if (a.dataset.v === view) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  const inp = $('#ans');
+  if (answered) { const n = document.querySelector('[data-act=next],[data-act=tnext]'); if (n) n.focus(); }
+  if (inp && !inp.disabled) { inp.focus(); inp.addEventListener('input', () => { const it = session.queue[0]; $('#pv').textContent = it.type === 'kana' ? '' : toHira(inp.value); }); }
+}
+function kanaView(){
+  const kata = s => s.replace(/[ぁ-ゖ]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+  const cells = KANA_ROWS.flatMap(([k, r]) => [...k].map((c, i) => c.trim() ? `<div><b>${c}</b><small>${kata(c)}・${r.split(' ')[i]}</small></div>` : '<div style="visibility:hidden"></div>')).join('');
+  return `<h1>五十音</h1><p class="sub" style="margin:0">平假名與片假名對照。點「開始練習」隨機出 10 題。</p><button class="primary" data-act="kana">開始練習</button><div class="kana">${cells}</div>`;
+}
+function toast(t){ $('#modal').innerHTML = `<div class="modal" role="dialog" aria-modal="true"><div class="card"><p style="margin-top:0">${esc(t)}</p><button class="indigo" data-act="close">知道了</button></div></div>`; }
+function confirmBox(t, act){ $('#modal').innerHTML = `<div class="modal" role="dialog" aria-modal="true"><div class="card"><p style="margin-top:0">${esc(t)}</p><div class="row"><button class="ghost" data-act="close">取消</button><button class="primary" data-act="${act}">確定</button></div></div></div>`; }
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('button,[data-go]'); if (!b) return;
+  if (b.dataset.say) { speak(b.dataset.say); return; }
+  if (b.dataset.go) { view = b.dataset.go; render(); return; }
+  if (b.dataset.unit) { startLesson(+b.dataset.unit); return; }
+  if (b.dataset.pick) { const it = session.queue[0]; grade(it._opts[+b.dataset.pick] === it.jp, '', +b.dataset.pick); return; }
+  if (b.dataset.tpick) { const q = session.queue[session.i], ok = q.opts[+b.dataset.tpick] === q.right; answered = {ok, pick:+b.dataset.tpick}; session.res.push({q, ok}); render(); return; }
+  const a = b.dataset.act;
+  if (a === 'lesson') { session = null; startLesson(); }
+  else if (a === 'review') { session = null; startReview(); }
+  else if (a === 'kana' || a === 'kanaagain') startKana();
+  else if (a === 'test' || a === 'retest') { testRes = null; startTest(); }
+  else if (a === 'lnext') { session.li++; render(); }
+  else if (a === 'check') { const v = $('#ans').value; if (!v.trim()) return; const it = session.queue[0]; grade(it.type === 'kana' ? [it.r, ...(ALT[it.r] || [])].includes(v.trim().toLowerCase()) : isRight(it, v), v); }
+  else if (a === 'next') advance();
+  else if (a === 'tnext') {
+    answered = null;
+    if (++session.i >= session.total) {
+      const res = session.res, wrongs = [];
+      res.filter(r => !r.ok).forEach(r => { const c = S.cards[r.q.it.id] || (S.cards[r.q.it.id] = {}); if (!c.reps) schedule(c, false); else c.due = NOW(); wrongs.push({q:r.q.q, a:r.q.right}); });
+      testRes = {sec:[{name:'文字・語彙', n:res.filter(r => !r.q.sec).length, got:res.filter(r => !r.q.sec && r.ok).length}, {name:'文法', n:res.filter(r => r.q.sec).length, got:res.filter(r => r.q.sec && r.ok).length}], wrongs};
+      touchDay(1); session = null; view = 'jlpt';
+    }
+    render();
+  }
+  else if (a === 'quit') { session = null; answered = null; render(); }
+  else if (a === 'close') $('#modal').innerHTML = '';
+  else if (a === 'reset') confirmBox('確定清除所有學習進度？這個動作無法復原。', 'doreset');
+  else if (a === 'doreset') { S = {cards:{}, target:0.9, streak:0, lastDay:'', log:{}, kana:0}; save(); $('#modal').innerHTML = ''; render(); }
+  else if (a === 'copy') { navigator.clipboard.writeText(JSON.stringify(S)).then(() => $('#msg').textContent = '已複製到剪貼簿。', () => $('#msg').textContent = '無法存取剪貼簿。'); }
+  else if (a === 'restore') { $('#modal').innerHTML = `<div class="modal" role="dialog" aria-modal="true"><div class="card"><label for="rs">貼上先前複製的進度</label><textarea id="rs" style="width:100%;height:120px;margin:8px 0;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:13px monospace;padding:8px"></textarea><div class="row"><button class="ghost" data-act="close">取消</button><button class="primary" data-act="dorestore">還原</button></div></div></div>`; }
+  else if (a === 'dorestore') { try { const v = JSON.parse($('#rs').value); if (!v.cards) throw 0; S = Object.assign({cards:{}, target:.9, streak:0, lastDay:'', log:{}, kana:0}, v); save(); $('#modal').innerHTML = ''; render(); } catch (err) { $('#rs').style.borderColor = 'var(--red)'; } }
+});
+document.addEventListener('submit', e => { e.preventDefault(); const c = document.querySelector('[data-act=check]'); if (c) c.click(); else { const n = document.querySelector('[data-act=next]'); if (n) n.click(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && answered && session && !session.queue[0]?.type?.startsWith('g')) { const n = document.querySelector('[data-act=next]'); if (n && document.activeElement?.id !== 'ans') { e.preventDefault(); n.click(); } } });
+document.addEventListener('change', e => { if (e.target.id === 'tg') { S.target = +e.target.value; save(); } });
+const route = () => { const h = location.hash.slice(1); if (['home','path','review','jlpt','me','kana'].includes(h)) { view = h; session = null; } render(); };
+window.addEventListener('hashchange', route);
+route();
+}).catch(() => { document.getElementById('main').innerHTML = '<h1>mojowu</h1><p>課程資料載入失敗，請檢查網路後重新整理。</p>'; });
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
