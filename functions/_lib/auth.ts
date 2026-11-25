@@ -8,7 +8,6 @@ import { sha256, uuid } from './db';
 import { auth, SESSION_DAYS, type AppEnv, type User } from './app-core';
 
 export const LOGIN_TTL_MIN = 15, MAX_LINKS_PER_HOUR = 5;
-export const BRAND = 'mojowu 魔力無限';   // 與 app/src/brand.ts 相同
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/;
 export const ALLOWED_ORIGINS = [/^https:\/\/mojowu\.app$/, /^https:\/\/mojowu\.pages\.dev$/, /^https:\/\/[a-z0-9-]+\.mojowu\.pages\.dev$/, /^http:\/\/localhost(:\d+)?$/];
 
@@ -19,14 +18,14 @@ export function randomToken(): string {
 }
 
 export function loginEmail(link: string) {
-  const subject = `登入 ${BRAND}`;
-  const text = `你好！\n\n點下面的連結就能登入 ${BRAND}（${LOGIN_TTL_MIN} 分鐘內有效，只能使用一次）：\n\n${link}\n\n如果不是你本人要求登入，請忽略這封信，帳號不會有任何變動。\n\n— ${BRAND}・日語學習`;
+  const subject = '登入 mojowu';
+  const text = `你好！\n\n點下面的連結就能登入 mojowu（${LOGIN_TTL_MIN} 分鐘內有效，只能使用一次）：\n\n${link}\n\n如果不是你本人要求登入，請忽略這封信，帳號不會有任何變動。\n\n— mojowu 日語學習`;
   const html = `<!doctype html><html><body style="margin:0;background:#F7F3EA;font-family:'Noto Sans TC',system-ui,sans-serif;color:#1F1B16">
 <div style="max-width:480px;margin:0 auto;padding:32px 24px">
-<div style="font-weight:700;color:#C23B22;font-size:20px">${BRAND}</div>
-<h1 style="font-size:22px;margin:16px 0 8px">登入 ${BRAND}</h1>
+<div style="font-weight:700;color:#C23B22;font-size:20px">mojowu</div>
+<h1 style="font-size:22px;margin:16px 0 8px">登入 mojowu</h1>
 <p style="font-size:16px;line-height:1.6;margin:0 0 24px">點下面的按鈕就能登入。連結 ${LOGIN_TTL_MIN} 分鐘內有效，只能使用一次。</p>
-<p style="margin:0 0 24px"><a href="${link}" style="display:inline-block;background:#C23B22;color:#fff;text-decoration:none;font-weight:700;padding:14px 28px;border-radius:14px">登入 ${BRAND}</a></p>
+<p style="margin:0 0 24px"><a href="${link}" style="display:inline-block;background:#C23B22;color:#fff;text-decoration:none;font-weight:700;padding:14px 28px;border-radius:14px">登入 mojowu</a></p>
 <p style="font-size:13px;color:#6B645A;line-height:1.6;margin:0">按鈕沒反應的話，複製這個網址到瀏覽器開啟：<br><span style="word-break:break-all">${link}</span></p>
 <p style="font-size:13px;color:#6B645A;line-height:1.6;margin:24px 0 0">如果不是你本人要求登入，請忽略這封信，帳號不會有任何變動。</p>
 </div></body></html>`;
@@ -55,7 +54,7 @@ export function authRoutes() {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { authorization: `Bearer ${c.env.RESEND_API_KEY}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ from: c.env.MAIL_FROM || `${BRAND} <login@mail.mojowu.app>`, to: [email], subject: msg.subject, text: msg.text, html: msg.html }),
+      body: JSON.stringify({ from: c.env.MAIL_FROM || 'mojowu <login@mail.mojowu.app>', to: [email], subject: msg.subject, text: msg.text, html: msg.html }),
     });
     if (!res.ok) { console.error('resend', res.status, await res.text().catch(() => '')); return c.json({ error: 'send_failed' }, 502); }
     return c.json({ ok: true });

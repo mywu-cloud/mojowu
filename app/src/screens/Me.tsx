@@ -3,7 +3,6 @@ import { ui, bump } from '../store/ui';
 import { analyticsOn, setAnalytics } from '../lib/track';
 import { FEEDBACK_URL } from '../links';
 import { AccountCard } from '../components/AccountCard';
-import { BRAND } from '../brand';
 
 export function Me() {
   const all = Object.values(S.cards), dayKeys = Object.keys(S.log).length;
@@ -24,7 +23,7 @@ export function Me() {
       <input type="checkbox" id="an" style={{ width: 24, height: 24, flex: 'none' }} checked={analyticsOn()} onChange={e => { setAnalytics(e.target.checked); bump(); }} /></label></section>
     <section className="card"><h2>意見回饋</h2><p className="sub">發現錯字、讀音錯誤，或有任何建議，都歡迎告訴我們。</p>
       <a className="btn indigo" href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">填寫意見回饋表單</a></section>
-    <a className="btn ghost" href="#about">關於 {BRAND}／資料來源</a>
+    <a className="btn ghost" href="#about">關於 mojowu／資料來源</a>
     <button className="ghost" style={{ borderColor: 'var(--red)', color: 'var(--red)' }} data-act="reset" onClick={() => { ui.modal = { kind: 'confirm', text: '確定清除所有學習進度？這個動作無法復原。', onOk: () => replaceState(defaultState()) }; bump(); }}>清除所有進度</button>
   </>;
 }
