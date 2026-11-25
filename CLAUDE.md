@@ -7,7 +7,7 @@
 **mojowu** 是給繁體中文使用者的日語學習 App：五十音 → JLPT N5 → N1，文字（漢字）・語彙・文法三軌並進，以 FSRS 間隔重複排程，並以 JLPT 模擬考當各階段關卡。
 最大差異化：使用者已懂漢字字義，所以漢字課專教讀音、新字體對照（國→国）與和製漢語陷阱（手紙＝信）。
 
-- 線上版：https://mojowu.app（2026-11-25 購入，Cloudflare Registrar；Pages 自訂網域）與 https://mojowu.pages.dev（封測者目前在用，**進度依網址分開存**，C3 前不要導轉，見 DECISIONS 18）。Cloudflare Pages，push `main` 自動部署；組建命令 `cd app && npm ci && npm run build`、輸出 `app/dist`）
+- 線上版：**https://mojowu.app**（2026-11-25 購入，Cloudflare Registrar；Pages 自訂網域）。`mojowu.pages.dev` 一律 301 轉到 mojowu.app（`functions/_middleware.ts`；預覽網址不轉）。Cloudflare Pages，push `main` 自動部署；組建命令 `cd app && npm ci && npm run build`、輸出 `app/dist`）
 - Repo：`mywu-cloud/mojowu`
 - 擁有者：MY（以繁體中文溝通）
 
