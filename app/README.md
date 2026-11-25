@@ -23,6 +23,7 @@ python3 ../../tests/e2e.py http://localhost:8770/index.html /tmp/app
 | `src/lib/speech.ts`、`date.ts` | TTS、日期 | speech |
 | `src/store/state.ts` | 進度 `S`、`initState()`（遷移與載入）、`save()`、`touchDay` | state |
 | `src/store/db.ts` | IndexedDB 讀寫（cards、meta） | — |
+| `src/lib/account.ts`、`src/components/AccountCard.tsx` | 登入（C2）：寄登入信、處理 `#login=` 連結、登出、`api()` 呼叫工具 | — |
 | `src/lib/track.ts` | 匿名學習事件（送到 `../functions/api/event.ts`，見 docs/ANALYTICS.md） | — |
 | `src/store/progress.ts` | 解鎖、`nextNew`、`dueList`、`unitHeavy` | state |
 | `src/store/ui.ts` | 畫面狀態＋`bump()`／`useUi()` 訂閱 | （MVP 的全域變數） |
@@ -41,6 +42,9 @@ python3 ../../tests/e2e.py http://localhost:8770/index.html /tmp/app
 | `progress.test.ts` | 單字解鎖、`nextNew` 順序、單元開放、到期清單、連續天數 |
 | `session.test.ts` | 只有第一次作答寫入 FSRS、答錯推回尾端、差一點只提示一次、五十音過關 |
 | `parity.test.ts` | 與 MVP 函式結果完全一致 |
+| `auth.test.ts` | 登入 API（假 Resend）：寄信、白名單、頻率限制、一次性、過期、登出 |
+| `account.test.ts` | 前端登入流程 |
+| `api.test.ts` | /health、/me、session 驗證（node:sqlite 模擬 D1） |
 | `event.test.ts` | `/api/event` 驗證與寫入（假 D1） |
 | `storage.test.ts` | IndexedDB 儲存、從 MVP 遷移、鏡像救回、無 IndexedDB 退回（fake-indexeddb） |
 

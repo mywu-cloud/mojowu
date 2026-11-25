@@ -20,7 +20,7 @@ h2{font-size:17px;margin:0}
 button,.btn{font:inherit;min-height:48px;border-radius:14px;border:0;padding:0 18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
 .primary{background:var(--red);color:#fff}.light{background:#fff;color:#A12F1A}.ghost{background:transparent;border:1.5px solid var(--blue);color:var(--blue)}.indigo{background:var(--blue);color:#fff}
 a.btn{text-decoration:none}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 button:disabled{opacity:.45;cursor:not-allowed}
 .row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}.wrap{flex-wrap:wrap}
 .rings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;text-align:center}

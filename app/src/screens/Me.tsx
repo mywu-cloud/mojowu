@@ -2,6 +2,7 @@ import { S, save, replaceState, defaultState, storage } from '../store/state';
 import { ui, bump } from '../store/ui';
 import { analyticsOn, setAnalytics } from '../lib/track';
 import { FEEDBACK_URL } from '../links';
+import { AccountCard } from '../components/AccountCard';
 
 export function Me() {
   const all = Object.values(S.cards), dayKeys = Object.keys(S.log).length;
@@ -13,6 +14,7 @@ export function Me() {
       <div className="stat" style={{ background: 'var(--bg)' }}><b>{all.length}</b><span>已學項目</span></div>
       <div className="stat" style={{ background: 'var(--bg)' }}><b>{S.streak}</b><span>連續天數</span></div>
       <div className="stat" style={{ background: 'var(--bg)' }}><b>{dayKeys}</b><span>學習天數</span></div></div></section>
+    <AccountCard />
     <section className="card"><label htmlFor="tg">目標記憶率</label><p className="sub" style={{ margin: '2px 0 8px' }}>越高記得越牢，但每天複習越多。</p>
       <select id="tg" value={S.target} onChange={e => { S.target = +e.target.value; save(); bump(); }}>{[.85, .9, .95].map(v => <option key={v} value={v}>{v * 100}%</option>)}</select></section>
     <section className="card"><h2>備份進度</h2><p className="sub">進度只存在這個瀏覽器{storage.backend === 'indexedDB' ? '（IndexedDB）' : ''}。複製後可貼回來還原。</p>

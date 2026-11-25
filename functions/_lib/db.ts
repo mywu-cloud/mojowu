@@ -7,7 +7,7 @@ export interface D1Stmt {
   run(): Promise<D1Result>;
 }
 export interface D1 { prepare(sql: string): D1Stmt; batch(stmts: D1Stmt[]): Promise<D1Result[]> }
-export interface Env { DB?: D1 }
+export interface Env { DB?: D1; RESEND_API_KEY?: string; MAIL_FROM?: string }
 
 export async function sha256(s: string): Promise<string> {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));

@@ -13,12 +13,14 @@
 | --- | --- |
 | `GET /api/health` | ✅ C1：D1 是否綁定、資料表是否齊全 |
 | `GET /api/me`、`PATCH /api/me` | ✅ C1（需登入；PATCH 可改 targetRetention、timezone、displayName、goal、dailyMinutes） |
-| `POST /api/auth/magic-link` 等登入流程 | C2 |
+| `POST /api/auth/magic-link`、`/api/auth/verify`、`/api/auth/logout` | ✅ C2（`functions/_lib/auth.ts`）：連結 15 分鐘、一次性、每 email 每小時 5 封；連結指向請求的 origin（白名單：mojowu.app、mojowu.pages.dev、預覽網址、localhost） |
 | `GET /api/cards`、`POST /api/reviews:batch` | C3 |
 | `DELETE /api/me` | C4 |
 | 其餘 | 依功能需要再加 |
 
-**Session**：登入後發給隨機 token，伺服器只存 SHA-256；有效 90 天，每天第一次使用時展延。
+**Session**：登入後發給隨機 token，伺服器只存 SHA-256；有效 90 天，每天第一次使用時展延。前端存在 localStorage `mojowu-session`（`app/src/lib/account.ts`）。
+
+**寄信**：Resend，網域 `mail.mojowu.app`（東京區，DKIM／SPF 已設，另有根網域 `_dmarc` p=none）。寄件人 `mojowu <login@mail.mojowu.app>`。Pages 機密 `RESEND_API_KEY`（Sending access，限 mail.mojowu.app）；可選變數 `MAIL_FROM`。登入連結格式 `https://<origin>/#login=<token>`，token 放在 # 後，不會進伺服器紀錄。
 
 ## 端點
 

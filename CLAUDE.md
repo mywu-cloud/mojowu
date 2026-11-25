@@ -13,11 +13,12 @@
 
 ## 目前狀態（2026-11-25）
 
-- **線上是 `app/`**（Vite + React + TS，v0.2.3，2026-11-25 起；見 `app/README.md`）。進度存 IndexedDB，localStorage `mojowu-v1` 為鏡像。**所有新功能做在 `app/`。**
+- **線上是 `app/`**（Vite + React + TS，v0.3.0，2026-11-25 起；見 `app/README.md`）。進度存 IndexedDB，localStorage `mojowu-v1` 為鏡像。**所有新功能做在 `app/`。**
 - **`public/index.html`（舊 MVP 單檔版）已不部署**，保留作為回退版本與 `app/test/parity.test.ts` 的對照；`public/data/` 仍是課程資料唯一來源。回退方法見 `docs/ARCHITECTURE.md` §1.6。
 - 內容只有 **N5**：79 漢字、718 單字、60 文法、10 單元。
 - 意見回饋：Google 表單「mojowu 意見回饋」（MY 的 Google 帳號，回覆在表單的「回覆」分頁），網址在 `app/src/links.ts`。
-- `functions/`：Cloudflare Pages Functions（Hono；`/api/event` 匿名事件、`/api/health`、`/api/me`，見 `docs/API.md`），部署時 Pages 自動編譯；依賴在根目錄 `package.json`。D1 資料庫 `mojowu` 綁定為 `DB`，資料表在 `migrations/*.sql`（D1 主控台手動執行）。
+- 帳號：Email 魔法連結登入（C2，Resend 寄信，Pages 機密 `RESEND_API_KEY`）。**雲端同步（C3）尚未上線**，登入後進度仍只在本機。
+- `functions/`：Cloudflare Pages Functions（Hono；`/api/event` 匿名事件、`/api/health`、`/api/me`、`/api/auth/*`，見 `docs/API.md`），部署時 Pages 自動編譯；依賴在根目錄 `package.json`。D1 資料庫 `mojowu` 綁定為 `DB`，資料表在 `migrations/*.sql`（D1 主控台手動執行）。
 - 下一個里程碑：帳號與雲端同步（C）、新手引導等功能（E）（見 `docs/ROADMAP.md`）。
 
 ## 文件地圖
