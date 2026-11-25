@@ -32,7 +32,7 @@ describe('POST /api/auth/magic-link', () => {
     expect(r.status).toBe(200);
     expect(sent).toHaveLength(1);
     expect(sent[0].to).toEqual(['my@example.com']);
-    expect(sent[0].from).toBe('mojowu <login@mail.mojowu.app>');
+    expect(sent[0].from).toBe('mojowu 魔力無限 <login@mail.mojowu.app>');
     expect(sent[0].html).toContain('https://mojowu.app/#login=');
     expect(sent[0].text).toContain('15 分鐘');
   });
@@ -111,7 +111,7 @@ describe('POST /api/auth/logout', () => {
 
 it('信件內容：繁中、有按鈕與純文字連結', () => {
   const m = loginEmail('https://mojowu.app/#login=abc');
-  expect(m.subject).toBe('登入 mojowu');
+  expect(m.subject).toBe('登入 mojowu 魔力無限');
   expect(m.html).toContain('href="https://mojowu.app/#login=abc"');
   expect(m.text).toContain('https://mojowu.app/#login=abc');
 });

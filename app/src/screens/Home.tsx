@@ -5,6 +5,7 @@ import { S, shownStreak } from '../store/state';
 import { count, currentUnit, dueList, nextNew, unitHeavy } from '../store/progress';
 import { Ring, SayButton } from '../components/common';
 import { go, startLesson, startReview } from '../session/actions';
+import { BRAND } from '../brand';
 
 export function Home() {
   const { K, V, G } = C;
@@ -15,7 +16,7 @@ export function Home() {
   const word = V[Math.floor(Date.parse(today()) / DAY) % V.length];
   const h = new Date().getHours();
   return <>
-    <div className="row between"><div><div style={{ fontWeight: 700, color: 'var(--red)', letterSpacing: '.02em' }}>mojowu</div><div className="sub">{wd}</div><h1>{h < 11 ? 'おはよう' : h < 18 ? 'こんにちは' : 'こんばんは'}</h1></div>
+    <div className="row between"><div><div style={{ fontWeight: 700, color: 'var(--red)', letterSpacing: '.02em' }}>{BRAND}</div><div className="sub">{wd}</div><h1>{h < 11 ? 'おはよう' : h < 18 ? 'こんにちは' : 'こんばんは'}</h1></div>
       <span className="pill red">連續 {shownStreak()} 天</span></div>
     <section className="hero pop"><div className="row between"><h2>今日任務</h2><span style={{ fontSize: 14 }}>N5・第 {u} 單元{unitHeavy(u) ? '・建議兩週' : ''}</span></div>
       <div className="stats"><div className="stat"><b>{due}</b><span>張到期複習</span></div><div className="stat"><b>{nw}</b><span>項新內容</span></div><div className="stat"><b>{mins}</b><span>分鐘左右</span></div></div>

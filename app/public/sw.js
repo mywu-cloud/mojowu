@@ -1,6 +1,6 @@
 // mojowu service worker: app shell + course data available offline.
 // Bump VERSION whenever app/src or public/data/*.json changes (built assets are hashed, but index.html is not).
-const VERSION = 'mojowu-app-v0.3.0';
+const VERSION = 'mojowu-app-v0.3.1';
 const SHELL = ['./', 'index.html', 'data/n5.json', 'manifest.webmanifest', 'icon.svg', 'icon-192.png'];
 
 self.addEventListener('install', e => {

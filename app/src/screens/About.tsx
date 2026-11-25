@@ -1,6 +1,7 @@
 import { C } from '../content/load';
 import { APP_VERSION } from '../version';
 import { FEEDBACK_URL } from '../links';
+import { BRAND } from '../brand';
 
 // 改這裡時同步更新 ATTRIBUTION.md（CC BY 姓名標示）
 export const SOURCES = [
@@ -14,7 +15,7 @@ const Ext = ({ u, t }: { u: string; t: string }) => <a href={u} target="_blank" 
 export function About() {
   return <>
     <div className="row"><a className="btn ghost" href="#me" style={{ minHeight: 44, padding: '0 14px' }} aria-label="返回我的">← 返回</a></div>
-    <h1>關於 mojowu</h1>
+    <h1>關於 {BRAND}</h1>
     <section className="card"><p style={{ margin: 0 }}>給繁體中文使用者的日語學習 App：五十音 → JLPT N5，文字・語彙・文法三軌並進，用間隔重複排程幫你記牢。</p>
       <p className="note" style={{ margin: '8px 0 0' }}>版本 {APP_VERSION}・封測版・內容範圍 N5（{C.K.length} 漢字、{C.V.length} 單字、{C.G.length} 文法）</p></section>
     <section className="card"><h2>資料來源與授權</h2><p className="sub" style={{ margin: '4px 0 10px' }}>感謝以下開放資料的作者。依授權條款標示姓名與來源。</p>
