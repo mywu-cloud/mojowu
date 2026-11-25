@@ -6,3 +6,4 @@ public/icon.svg
 public/icon-192.png
 public/icon-512.png
 public/manifest.webmanifest
+*.tsbuildinfo
