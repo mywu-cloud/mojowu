@@ -20,7 +20,7 @@
 - [x] A1 MVP 上線 mojowu.pages.dev（2026-11-25）
 - [x] A2 App 內「關於／資料來源」頁，顯示 ATTRIBUTION（CC BY 必要）（2026-11-25，`#about`，從「我的」進入）
 - [x] A3 匿名事件紀錄：開 Cloudflare Web Analytics＋自訂事件（lesson_done、review_done、test_done），以便算留存（2026-11-25；`docs/ANALYTICS.md`）
-- [ ] A4 意見回饋入口（連到 Google 表單或 email，顯示文字地址）
+- [x] A4 意見回饋入口（連到 Google 表單或 email，顯示文字地址）（2026-11-25，Google 表單「mojowu 意見回饋」，入口在「我的」與關於頁；網址在 `app/src/links.ts`）
 - [x] A5 單元 2 拆成「2a 數字」「2b 日期與時間」或 UI 標示「建議兩週」（2026-11-25，採 UI 標示：漢字 ≥ 20 的單元在路徑頁與今日任務顯示「建議兩週」，不改單元編號以免影響封測進度）
 - [x] A6 長音／促音打錯時提示「差一點」（2026-11-25）
 
