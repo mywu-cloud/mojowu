@@ -7,16 +7,16 @@
 **mojowu** 是給繁體中文使用者的日語學習 App：五十音 → JLPT N5 → N1，文字（漢字）・語彙・文法三軌並進，以 FSRS 間隔重複排程，並以 JLPT 模擬考當各階段關卡。
 最大差異化：使用者已懂漢字字義，所以漢字課專教讀音、新字體對照（國→国）與和製漢語陷阱（手紙＝信）。
 
-- 線上版：https://mojowu.pages.dev（Cloudflare Pages，push `main` 自動部署）
+- 線上版：https://mojowu.pages.dev（Cloudflare Pages，push `main` 自動部署；組建命令 `cd app && npm ci && npm run build`、輸出 `app/dist`）
 - Repo：`mywu-cloud/mojowu`
 - 擁有者：MY（以繁體中文溝通）
 
 ## 目前狀態（2026-11-25）
 
-- **MVP 封測版**：`public/index.html` 單檔 PWA，無建置步驟、無後端、進度存 localStorage。
+- **線上是 `app/`**（Vite + React + TS，v0.2.1，2026-11-25 起；見 `app/README.md`）。進度存 IndexedDB，localStorage `mojowu-v1` 為鏡像。**所有新功能做在 `app/`。**
+- **`public/index.html`（舊 MVP 單檔版）已不部署**，保留作為回退版本與 `app/test/parity.test.ts` 的對照；`public/data/` 仍是課程資料唯一來源。回退方法見 `docs/ARCHITECTURE.md` §1.6。
 - 內容只有 **N5**：79 漢字、718 單字、60 文法、10 單元。
-- **`app/`**：Vite + React + TS 版本（B1 完成，功能與 MVP 對等，**尚未部署**；見 `app/README.md`）。新功能請做在 `app/`，MVP 只修封測必要的問題，直到 B5 切換部署。
-- 下一個里程碑：單元測試補齊、IndexedDB、加帳號與雲端同步（見 `docs/ROADMAP.md`）。
+- 下一個里程碑：帳號與雲端同步（C）、新手引導等功能（E）（見 `docs/ROADMAP.md`）。
 
 ## 文件地圖
 

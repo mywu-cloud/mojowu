@@ -66,6 +66,18 @@ hash 路由：`#home #path #review #jlpt #me #kana`。學習回合（`session`�
 - `test/parity.test.ts` 直接執行 `public/index.html` 內的函式做對照，確保移植零行為差異。
 - **儲存（B3）**：IndexedDB `mojowu` v1（`cards`：key＝項目 ID；`meta`：target、streak、lastDay、log、kana、savedAt、migratedFrom）。`save()` 同步寫 localStorage 鏡像（`mojowu-v1`＋`mojowu-v1-savedAt`），再合併排入 IndexedDB 交易、只寫有變動的卡片。啟動 `initState()`：IndexedDB 空而 localStorage 有資料＝從 MVP 遷移；兩邊都有則取 savedAt 較新者並補寫另一邊；沒有 IndexedDB 時退回只用 localStorage。`navigator.storage.persist()` 降低被瀏覽器清除的機率。
 
+## 1.6 部署（B5，2026-11-25 起）
+
+| Cloudflare Pages 組建組態 | 現在（app） | 回退到 MVP |
+| --- | --- | --- |
+| 組建命令 | `cd app && npm ci && npm run build` | （空白） |
+| 組建輸出 | `app/dist` | `public` |
+| 根目錄 | （空白） | （空白） |
+
+- Node 版本由 repo 根目錄 `.node-version`（22）決定；組建系統版本 3。
+- 回退：把組建組態改回右欄並重新部署（或在 Pages「部署」頁對舊部署按「回滾」）。進度不會遺失——app 每次儲存都同步寫 localStorage `mojowu-v1`，MVP 讀的就是它；只有 IndexedDB 獨有、尚未寫進鏡像的資料不存在（正常情況沒有）。
+- 回退後 MVP 的 sw.js（`mojowu-v0.1.x`）會取代 app 的（`mojowu-app-v…`）並清掉其快取。
+
 ## 2. 目標架構（正式版）
 
 ```
