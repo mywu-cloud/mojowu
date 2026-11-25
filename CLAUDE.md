@@ -17,7 +17,7 @@
 - **`public/index.html`（舊 MVP 單檔版）已不部署**，保留作為回退版本與 `app/test/parity.test.ts` 的對照；`public/data/` 仍是課程資料唯一來源。回退方法見 `docs/ARCHITECTURE.md` §1.6。
 - 內容只有 **N5**：79 漢字、718 單字、60 文法、10 單元。
 - 意見回饋：Google 表單「mojowu 意見回饋」（MY 的 Google 帳號，回覆在表單的「回覆」分頁），網址在 `app/src/links.ts`。
-- `functions/`：Cloudflare Pages Functions（目前只有 `/api/event` 匿名事件），部署時 Pages 自動編譯；D1 資料庫 `mojowu` 綁定為 `DB`。
+- `functions/`：Cloudflare Pages Functions（Hono；`/api/event` 匿名事件、`/api/health`、`/api/me`，見 `docs/API.md`），部署時 Pages 自動編譯；依賴在根目錄 `package.json`。D1 資料庫 `mojowu` 綁定為 `DB`，資料表在 `migrations/*.sql`（D1 主控台手動執行）。
 - 下一個里程碑：帳號與雲端同步（C）、新手引導等功能（E）（見 `docs/ROADMAP.md`）。
 
 ## 文件地圖
@@ -49,6 +49,9 @@ node scripts/validate_data.mjs [--baseline <舊版 n5.json>]
 
 # 羅馬字轉假名單元測試
 node tests/romaji.test.mjs
+
+# functions 依賴（根目錄）；API 測試在 app/test/api.test.ts
+npm ci
 
 # app/（React 版）
 cd app && npm install && npm run dev      # http://localhost:5173

@@ -1,6 +1,24 @@
-# API 與資料庫（目標架構，尚未實作）
+# API 與資料庫
 
-排程在用戶端算，伺服器只負責存取與同步，所以離線也能複習。全部端點需 Bearer token，內容 JSON 除外。Workers 用 Hono。
+排程在用戶端算，伺服器只負責存取與同步，所以離線也能複習。全部端點需 Bearer token，內容 JSON 與 `/api/health` 除外。
+
+## 實作狀態
+
+- **部署方式**：與網站同一個 Cloudflare Pages 專案的 Pages Functions（不是獨立 Worker，見 DECISIONS 17）。所有端點加 `/api` 前綴，同源、不需 CORS。
+- 程式：`functions/_lib/app.ts`（Hono app）、`functions/api/[[route]].ts`（入口）、`functions/api/event.ts`（匿名事件，A3）。依賴在根目錄 `package.json`，Pages 建置時自動安裝。
+- 資料表：`migrations/*.sql`，在 D1 主控台依序執行（皆為 `IF NOT EXISTS`，可重跑）。實際欄位以 migration 檔為準（比下方草案多了 `updated_at`、`streak`、`last_day`、`kana`，以及登入用的 `login_tokens`、`sessions`）。
+- 測試：`app/test/api.test.ts`，用 Node 內建 SQLite 模擬 D1（`app/test/helpers/d1.ts`）並套用 migration。
+
+| 端點 | 狀態 |
+| --- | --- |
+| `GET /api/health` | ✅ C1：D1 是否綁定、資料表是否齊全 |
+| `GET /api/me`、`PATCH /api/me` | ✅ C1（需登入；PATCH 可改 targetRetention、timezone、displayName、goal、dailyMinutes） |
+| `POST /api/auth/magic-link` 等登入流程 | C2 |
+| `GET /api/cards`、`POST /api/reviews:batch` | C3 |
+| `DELETE /api/me` | C4 |
+| 其餘 | 依功能需要再加 |
+
+**Session**：登入後發給隨機 token，伺服器只存 SHA-256；有效 90 天，每天第一次使用時展延。
 
 ## 端點
 

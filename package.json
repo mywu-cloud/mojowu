@@ -1,0 +1,9 @@
+{
+  "name": "mojowu-functions",
+  "private": true,
+  "description": "Cloudflare Pages Functions（functions/）的依賴。Pages 建置時會自動在根目錄安裝；app/ 有自己的 package.json。",
+  "type": "module",
+  "dependencies": {
+    "hono": "^4.13.22"
+  }
+}

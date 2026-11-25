@@ -34,7 +34,7 @@
 
 ### C. 帳號與同步
 
-- [ ] C1 Workers + Hono 專案（`api/`），D1 建表（`docs/API.md`）
+- [x] C1 Workers + Hono 專案（`api/`），D1 建表（`docs/API.md`）（2026-11-25；改用同專案 Pages Functions，`functions/`＋`migrations/0001_accounts.sql`，見 DECISIONS 17）
 - [ ] C2 Email 魔法連結登入；之後 Google、Apple
 - [ ] C3 `/reviews:batch` 與 `/cards?since=` 離線同步
 - [ ] C4 刪除帳號
