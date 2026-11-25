@@ -20,9 +20,18 @@ async def main():
         await pg.screenshot(path=SHOT + "_home.png")
         # lesson 1
         await pg.click("[data-act=lesson]")
+        first = await pg.evaluate("""() => { const b=[...document.querySelectorAll('.read b')].map(x=>x.textContent).find(t=>t && t!=='—'); return b ? b.split('、')[0].split('.')[0].replace(/-/g,'') : ''; }""")
         for _ in range(5):
             await pg.click("[data-act=lnext]")
         await pg.screenshot(path=SHOT + "_quiz.png")
+        # A6「差一點」：正解多打一個長音 → 提示、不計分；再打正解 → 答對
+        if first and await pg.locator("#ans").count():
+            await pg.fill("#ans", first + "ー"); await pg.click("[data-act=check]"); await pg.wait_for_timeout(50)
+            if "差一點" not in await pg.inner_text("#main"): errs.append("near-miss hint not shown for " + first)
+            await pg.screenshot(path=SHOT + "_near.png")
+            await pg.fill("#ans", first); await pg.click("[data-act=check]"); await pg.wait_for_timeout(50)
+            if not await pg.locator(".fb.ok").count(): errs.append("correct answer after hint not accepted: " + first)
+            await pg.click("[data-act=next]")
         n = 0
         while await pg.locator("#ans, [data-pick]").count() and n < 30:
             n += 1
@@ -48,6 +57,7 @@ async def main():
         print("cards after lesson:", len(st["cards"]), "streak", st["streak"])
         # romaji converter + answer check via reload-free eval of a sample
         await pg.goto(URL + "#path"); await pg.wait_for_timeout(300)
+        if "建議兩週" not in await pg.inner_text("#main"): errs.append("unit 2 heavy hint missing")
         await pg.screenshot(path=SHOT + "_path.png")
         await pg.evaluate("() => { const s=JSON.parse(localStorage.getItem('mojowu-v1')); for (const c of Object.values(s.cards)) c.due=0; localStorage.setItem('mojowu-v1', JSON.stringify(s)); }")
         await pg.goto(URL + "#review"); await pg.reload(); await pg.wait_for_timeout(300)

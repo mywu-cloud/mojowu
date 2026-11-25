@@ -117,12 +117,24 @@ function toHira(input){
 }
 const kataToHira = s => s.replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
 const norm = s => kataToHira(toHira(String(s).trim())).replace(/[\s～〜\.\-・]/g, '').replace(/ー/g, 'ー');
+// 「差一點」：去掉促音 っ、長音 ー，並把長音母音（おう／おお／えい／ああ…）縮成一個，比對是否只差在這裡
+const VOW = Object.fromEntries([...Object.entries(R2K).filter(([r, k]) => k.length === 1 && /[aiueo]$/.test(r)).map(([r, k]) => [k, r.at(-1)]), ['ゃ','a'],['ゅ','u'],['ょ','o'],['ぁ','a'],['ぃ','i'],['ぅ','u'],['ぇ','e'],['ぉ','o']]);
+function loose(s){
+  let out = '', pv = '';
+  for (const c of s.replace(/[っー]/g, '')) {
+    const v = VOW[c];
+    if ('あいうえお'.includes(c) && pv && (v === pv || (pv === 'o' && v === 'u') || (pv === 'e' && v === 'i'))) continue;
+    out += c; pv = v || '';
+  }
+  return out;
+}
 function answersFor(it){
   if (it.type === 'v') return it.rd.split(';').map(x => x.replace(/\(.*?\)|（.*?）/g, '').trim()).filter(Boolean);
   if (it.type === 'k') return [...it.on, ...it.kun.map(x => x.split('.')[0])].map(x => x.replace(/-/g, ''));
   return [];
 }
 const isRight = (it, typed) => { const t = norm(typed); return t && answersFor(it).some(a => norm(a) === t); };
+const isNear = (it, typed) => { const t = loose(norm(typed)); return !!t && answersFor(it).some(a => loose(norm(a)) === t); };
 
 /* ---------- FSRS-4.5 (default weights) ---------- */
 const W = [0.4872,1.4003,3.7145,13.8206,5.1618,1.2298,0.8975,0.031,1.6474,0.1367,1.0461,2.1072,0.0793,0.3246,1.587,0.2272,2.8755];
@@ -168,6 +180,8 @@ const unitItems = n => [...K, ...V, ...G].filter(it => it.unit === n);
 const unitDone = n => unitItems(n).every(it => learned(it.id));
 const currentUnit = () => (UNITS.find(u => !unitDone(u.n)) || UNITS.at(-1)).n;
 const unitOpen = n => n === 1 || unitDone(n - 1);
+const HEAVY_K = 20;  // 漢字數達此門檻的單元標示「建議兩週」（目前只有單元 2：28 字）
+const unitHeavy = n => unitItems(n).filter(i => i.type === 'k').length >= HEAVY_K;
 function nextNew(n, max = 5){
   const items = unitItems(n).filter(it => !learned(it.id) && available(it));
   const order = {k:0, v:1, g:2};
@@ -192,7 +206,7 @@ function home(){
   const word = V[Math.floor(Date.parse(today()) / DAY) % V.length];
   return `<div class="row between"><div><div style="font-weight:700;color:var(--red);letter-spacing:.02em">mojowu</div><div class="sub">${esc(wd)}</div><h1>${new Date().getHours() < 11 ? 'おはよう' : new Date().getHours() < 18 ? 'こんにちは' : 'こんばんは'}</h1></div>
     <span class="pill red">連續 ${S.lastDay === today() || S.lastDay === new Date(NOW()-DAY).toLocaleDateString('sv') ? S.streak : 0} 天</span></div>
-  <section class="hero pop"><div class="row between"><h2>今日任務</h2><span style="font-size:14px">N5・第 ${u} 單元</span></div>
+  <section class="hero pop"><div class="row between"><h2>今日任務</h2><span style="font-size:14px">N5・第 ${u} 單元${unitHeavy(u) ? '・建議兩週' : ''}</span></div>
     <div class="stats"><div class="stat"><b>${due}</b><span>張到期複習</span></div><div class="stat"><b>${nw}</b><span>項新內容</span></div><div class="stat"><b>${mins}</b><span>分鐘左右</span></div></div>
     <button class="light" data-act="${due ? 'review' : 'lesson'}">${due ? '先複習到期的卡' : nw ? '開始新課' : '本單元已學完'}</button>
     ${due && nw ? `<button class="light" style="background:rgba(255,255,255,.16);color:#fff" data-act="lesson">直接上新課</button>` : ''}</section>
@@ -215,7 +229,7 @@ function path(){
     return `<button class="unit ${open ? '' : 'locked'}" ${open ? `data-unit="${u.n}"` : 'disabled'} aria-label="第 ${u.n} 單元 ${esc(u.t)}${open ? '' : '，尚未解鎖'}">
       <span class="dot ${done ? 'done' : u.n === cu ? 'now' : ''}">${u.n}</span>
       <span style="flex:1"><span class="row between"><b>${esc(u.t)}</b><span class="sub">${got}/${items.length}</span></span>
-      <span class="sub">${k} 漢字・${v} 單字・${g} 文法</span>${open && !done ? `<span class="bar" style="margin-top:6px"><i style="width:${got/items.length*100}%"></i></span>` : ''}</span></button>`;
+      <span class="sub">${k} 漢字・${v} 單字・${g} 文法</span>${unitHeavy(u.n) && !done ? `<span class="row" style="margin-top:4px"><span class="pill red">建議兩週</span><span class="note">漢字較多，慢慢來沒關係</span></span>` : ''}${open && !done ? `<span class="bar" style="margin-top:6px"><i style="width:${got/items.length*100}%"></i></span>` : ''}</span></button>`;
   }).join('');
   return `<h1>學習路徑</h1><p class="sub" style="margin:0">N5 十個單元。漢字答對後才解鎖含該字的單字；學完一單元開下一單元。</p>${kanaRow}${rows}
   <p class="note">N4–N1 將依相同結構陸續加入。</p>`;
@@ -259,7 +273,7 @@ function me(){
   <button class="ghost" style="border-color:var(--red);color:var(--red)" data-act="reset">清除所有進度</button>`;
 }
 
-const APP_VERSION = '0.1.1';
+const APP_VERSION = '0.1.2';
 const SOURCES = [
   {what:'漢字讀音、筆畫、JLPT 等級', name:'kanji-data', by:'David Luz Gouveia', url:'https://github.com/davidluzgouveia/kanji-data', lic:'MIT'},
   {what:'漢字讀音原始資料', name:'KANJIDIC', by:'Electronic Dictionary Research and Development Group（EDRDG）', url:'https://www.edrdg.org/wiki/index.php/KANJIDIC_Project', lic:'CC BY-SA 4.0（EDRDG 授權）', licUrl:'https://www.edrdg.org/edrdg/licence.html'},
@@ -320,7 +334,7 @@ function learnCard(it){
     <div class="card"><div class="row between"><span class="jp" style="font-size:20px">${esc(it.jp)}</span>${sayBtn(it.jp)}</div><p class="sub" style="margin:4px 0 0">${esc(it.tr)}</p></div>`;
 }
 
-let answered = null;
+let answered = null, nudge = null;
 function quizCard(it){
   if (it.type === 'g') {
     if (!it._opts) it._opts = [it.jp, ...[...G].filter(x => x !== it).sort(() => Math.random() - .5).slice(0, 2).map(x => x.jp)].sort(() => Math.random() - .5);
@@ -333,8 +347,9 @@ function quizCard(it){
   return `<div class="card" style="text-align:center"><span class="pill">${it.type === 'kana' ? '假名' : it.type === 'k' ? '漢字' : '單字'}</span>
     <div class="jp" style="font-size:${q.length > 4 ? 44 : 72}px;font-weight:700;line-height:1.3">${esc(q)}</div><p class="sub" style="margin:0">${ask}</p></div>
     <form id="af"><label for="ans">${it.type === 'kana' ? '例：ka' : '可直接打羅馬字，會自動轉成假名'}</label>
-    <input type="text" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" ${answered ? 'disabled' : ''} value="${answered ? esc(answered.typed) : ''}">
-    <div id="pv" class="note jp" style="min-height:20px"></div></form>`;
+    <input type="text" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" ${answered ? 'disabled' : ''} value="${answered ? esc(answered.typed) : nudge && nudge.id === it.id ? esc(nudge.typed) : ''}">
+    <div id="pv" class="note jp" style="min-height:20px"></div></form>
+    ${!answered && nudge && nudge.id === it.id ? `<div class="warn pop" role="status"><b>差一點！</b>注意長音（う・い・ー）和促音（っ），再試一次。</div>` : ''}`;
 }
 function feedback(it){
   if (!answered) return '';
@@ -384,7 +399,7 @@ function grade(ok, typed, pick){
 function advance(){
   const s = session, it = s.queue.shift();
   if (s.kind !== 'kana' && !answered.ok) s.queue.push(it); else s.done++;
-  answered = null;
+  answered = null; nudge = null;
   if (!s.queue.length && s.kind !== 'kana') touchDay(s.total);
   if (!s.queue.length && s.kind === 'kana') { S.kana = Math.max(S.kana, s.score >= 8 ? 1 : 0); touchDay(1); }
   render();
@@ -422,7 +437,13 @@ document.addEventListener('click', e => {
   else if (a === 'kana' || a === 'kanaagain') startKana();
   else if (a === 'test' || a === 'retest') { testRes = null; startTest(); }
   else if (a === 'lnext') { session.li++; render(); }
-  else if (a === 'check') { const v = $('#ans').value; if (!v.trim()) return; const it = session.queue[0]; grade(it.type === 'kana' ? [it.r, ...(ALT[it.r] || [])].includes(v.trim().toLowerCase()) : isRight(it, v), v); }
+  else if (a === 'check') {
+    const v = $('#ans').value; if (!v.trim()) return; const it = session.queue[0];
+    if (it.type === 'kana') { grade([it.r, ...(ALT[it.r] || [])].includes(v.trim().toLowerCase()), v); return; }
+    const ok = isRight(it, v);
+    if (!ok && !(nudge && nudge.id === it.id) && isNear(it, v)) { nudge = {id:it.id, typed:v}; render(); return; }  // 只提示一次，第二次照常計分
+    nudge = null; grade(ok, v);
+  }
   else if (a === 'next') advance();
   else if (a === 'tnext') {
     answered = null;
@@ -434,7 +455,7 @@ document.addEventListener('click', e => {
     }
     render();
   }
-  else if (a === 'quit') { session = null; answered = null; render(); }
+  else if (a === 'quit') { session = null; answered = null; nudge = null; render(); }
   else if (a === 'close') $('#modal').innerHTML = '';
   else if (a === 'reset') confirmBox('確定清除所有學習進度？這個動作無法復原。', 'doreset');
   else if (a === 'doreset') { S = {cards:{}, target:0.9, streak:0, lastDay:'', log:{}, kana:0}; save(); $('#modal').innerHTML = ''; render(); }
