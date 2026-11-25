@@ -38,8 +38,11 @@
 # 本機預覽（任何靜態伺服器皆可）
 cd public && python3 -m http.server 8765        # 開 http://localhost:8765
 
-# 端對端測試（需 playwright + chrome）
+# 端對端測試（需 playwright + chrome；有錯誤時 exit 1）
 python3 tests/e2e.py http://localhost:8765/index.html /tmp/shot
+
+# 課程資料驗證（--baseline 檢查 ID 沒被刪除或改號）
+node scripts/validate_data.mjs [--baseline <舊版 n5.json>]
 
 # 羅馬字轉假名單元測試
 node tests/romaji.test.mjs
@@ -64,7 +67,7 @@ python3 scripts/build_xlsx.py content/n5.json content/N5_content.xlsx
 4. **內容 ID 永遠不可重用或改號**（`k001`、`v0001`、`g01`），使用者卡片以 ID 對應。新增內容往後編號。
 5. **資料來源授權**：不得使用 WaniKani 的部件名稱與記憶口訣（有著作權）；JLPT 官方考題不得收錄。新資料來源先寫進 `ATTRIBUTION.md`。
 6. MVP：所有使用者看得到的資料字串都要經過 `esc()` 再塞進 HTML。app：交給 React 跳脫，不准用 `dangerouslySetInnerHTML`。
-7. 每次改動跑 `tests/e2e.py` 確認 `errors: []`（MVP 與 app/dist 都可跑）；改 `app/` 另跑 `npm test`。沙盒連不到 Google Fonts 時會出現 2 筆 `ERR_TUNNEL_CONNECTION_FAILED`，可忽略。
+7. 每次改動跑 `tests/e2e.py` 確認 `errors: []`（MVP 與 app/dist 都可跑）；改 `app/` 另跑 `npm test`；改資料另跑 `scripts/validate_data.mjs`。PR 與 push `main` 時 GitHub Actions（`.github/workflows/ci.yml`）會自動跑全部。
 8. Commit 訊息用繁體中文，說明「改了什麼、為什麼」。
 
 ## 已知限制與地雷

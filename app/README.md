@@ -29,6 +29,17 @@ python3 ../../tests/e2e.py http://localhost:8770/index.html /tmp/app
 | `src/components/` | 底部導覽、對話框、進度環、發音鈕 | shell |
 | `test/parity.test.ts` | 從 `public/index.html` 取出 MVP 函式，比對 romaji 與 FSRS 結果一致；MVP 退場後刪除 | — |
 
+## 測試（`npm test`）
+
+| 檔案 | 測什麼 |
+| --- | --- |
+| `romaji.test.ts` | 羅馬字轉假名、`norm`、`loose` |
+| `answers.test.ts` | 答案比對規則；**用真實 N5 資料確認每個單字、漢字的正解都能答對** |
+| `fsrs.test.ts` | FSRS 公式性質與回歸值（鎖住現行排程，改了封測者間隔會變） |
+| `progress.test.ts` | 單字解鎖、`nextNew` 順序、單元開放、到期清單、連續天數 |
+| `session.test.ts` | 只有第一次作答寫入 FSRS、答錯推回尾端、差一點只提示一次、五十音過關 |
+| `parity.test.ts` | 與 MVP 函式結果完全一致 |
+
 ## 注意
 
 - 課程資料只維護一份在 `../public/data/`；`npm run dev/build` 前會自動同步（`scripts/sync-public.mjs`），同步來的檔案不進 git。

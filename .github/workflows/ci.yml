@@ -1,0 +1,96 @@
+# CI：PR 與 push main 時跑。對應 ROADMAP B4。
+# 不負責部署——部署仍由 Cloudflare Pages 監看 main 自動進行。
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  data:
+    name: 課程資料驗證
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 格式與完整性
+        run: node scripts/validate_data.mjs
+      - name: ID 不可刪除或改號（對照上一版）
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE:public/data/n5.json" 2>/dev/null; then
+            echo "沒有可比對的基準版，略過"; exit 0
+          fi
+          git show "$BASE:public/data/n5.json" > /tmp/base.json
+          node scripts/validate_data.mjs --baseline /tmp/base.json
+
+  app:
+    name: app 單元測試與建置
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-dist
+          path: app/dist
+          retention-days: 7
+
+  e2e:
+    name: 端對端測試（MVP 與 app）
+    needs: app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: MVP 羅馬字測試
+        run: node tests/romaji.test.mjs
+      - name: 安裝 Playwright
+        run: |
+          pip install "playwright>=1.48"
+          python -m playwright install --with-deps chromium
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-dist
+          path: app/dist
+      - name: MVP e2e
+        run: |
+          (cd public && python -m http.server 8765 >/dev/null 2>&1 &)
+          sleep 1
+          python tests/e2e.py http://localhost:8765/index.html /tmp/mvp
+      - name: app e2e
+        run: |
+          (cd app/dist && python -m http.server 8770 >/dev/null 2>&1 &)
+          sleep 1
+          python tests/e2e.py http://localhost:8770/index.html /tmp/app
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-screenshots
+          path: /tmp/*.png
+          retention-days: 7

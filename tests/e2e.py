@@ -1,7 +1,9 @@
 """End-to-end smoke test for public/index.html.
 
 Usage: python3 tests/e2e.py http://localhost:8765/index.html /tmp/shot
-Runs a lesson, a review, a kana drill and the practice test; prints JS errors (expect errors: []).
+Runs a lesson, a review, a kana drill and the practice test; prints JS errors and exits 1 if any.
+Works for both the MVP (public/) and the React app (app/dist) — they share selectors.
+Google Fonts are stubbed with an empty stylesheet so results don't depend on network access.
 """
 import asyncio, os, sys
 from playwright.async_api import async_playwright
@@ -14,6 +16,7 @@ async def main():
         b = await p.chromium.launch(**({"executable_path": os.environ["CHROME"]} if os.environ.get("CHROME") else {}), args=["--no-sandbox"])
         pg = await b.new_page(viewport={"width": 390, "height": 844})
         errs = []
+        await pg.route("**/fonts.{googleapis,gstatic}.com/**", lambda r: r.fulfill(status=200, content_type="text/css", body=""))
         pg.on("pageerror", lambda e: errs.append(str(e)))
         pg.on("console", lambda m: m.type == "error" and errs.append(m.text))
         await pg.goto(URL); await pg.wait_for_timeout(800)
@@ -88,5 +91,6 @@ async def main():
         await pg.screenshot(path=SHOT + "_dark.png")
         print("errors:", errs)
         await b.close()
+        if errs: sys.exit(1)
 
 asyncio.run(main())
