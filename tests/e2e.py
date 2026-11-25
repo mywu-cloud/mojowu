@@ -69,6 +69,11 @@ async def main():
         await pg.screenshot(path=SHOT + "_test.png", full_page=True)
         await pg.goto(URL + "#me"); await pg.wait_for_timeout(300)
         await pg.screenshot(path=SHOT + "_me.png")
+        await pg.click("a[href='#about']"); await pg.wait_for_timeout(300)
+        txt = await pg.inner_text("#main")
+        for must in ["資料來源", "Tanos", "Jonathan Waller", "KANJIDIC", "CC BY"]:
+            if must not in txt: errs.append("about page missing: " + must)
+        await pg.screenshot(path=SHOT + "_about.png", full_page=True)
         await pg.emulate_media(color_scheme="dark"); await pg.goto(URL + "#home"); await pg.wait_for_timeout(300)
         await pg.screenshot(path=SHOT + "_dark.png")
         print("errors:", errs)

@@ -18,7 +18,7 @@ MVP 沒有後端，這些數字目前無法收集 → 待辦 A3。
 ### A. 封測立即需要
 
 - [x] A1 MVP 上線 mojowu.pages.dev（2026-11-25）
-- [ ] A2 App 內「關於／資料來源」頁，顯示 ATTRIBUTION（CC BY 必要）
+- [x] A2 App 內「關於／資料來源」頁，顯示 ATTRIBUTION（CC BY 必要）（2026-11-25，`#about`，從「我的」進入）
 - [ ] A3 匿名事件紀錄：開 Cloudflare Web Analytics＋自訂事件（lesson_done、review_done、test_done），以便算留存
 - [ ] A4 意見回饋入口（連到 Google 表單或 email，顯示文字地址）
 - [ ] A5 單元 2 拆成「2a 數字」「2b 日期與時間」或 UI 標示「建議兩週」
