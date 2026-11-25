@@ -75,6 +75,7 @@ hash 路由：`#home #path #review #jlpt #me #kana`。學習回合（`session`�
 | 根目錄 | （空白） | （空白） |
 
 - Node 版本由 repo 根目錄 `.node-version`（22）決定；組建系統版本 3。
+- 自訂網域：`mojowu.app`（Pages → 自訂網域，2026-11-25 啟用）。`mojowu.pages.dev` 仍可用；兩者的本機進度互不相通，搬家計畫見 DECISIONS 18。
 - 回退：把組建組態改回右欄並重新部署（或在 Pages「部署」頁對舊部署按「回滾」）。進度不會遺失——app 每次儲存都同步寫 localStorage `mojowu-v1`，MVP 讀的就是它；只有 IndexedDB 獨有、尚未寫進鏡像的資料不存在（正常情況沒有）。
 - 回退後 MVP 的 sw.js（`mojowu-v0.1.x`）會取代 app 的（`mojowu-app-v…`）並清掉其快取。
 
