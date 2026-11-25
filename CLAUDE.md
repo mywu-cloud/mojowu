@@ -84,4 +84,4 @@ python3 scripts/build_xlsx.py content/n5.json content/N5_content.xlsx
 - 單字中非 N5 漢字（如 駅、鉛筆）不列入解鎖條件，直接顯示。
 - 字典資料的英文釋義保留在 `content/n5.json` 但 App 不用。
 - 繁中釋義、文法例句是自行撰寫，**尚未經日語教師校對**。
-- 發音用瀏覽器 TTS（`speechSynthesis`），品質依裝置而異；正式版改預錄音檔。
+- 發音用瀏覽器 TTS（`speechSynthesis`，`app/src/lib/speech.ts`，優先選日語語音），品質依裝置而異；正式版改預錄音檔（D2）。發音入口：今日一字、新單字／文法卡、新漢字卡每個讀音、答題後正解（可設自動唸）、五十音表每格。

@@ -5,7 +5,8 @@ import { answersFor, toHira } from '../lib/romaji';
 import { S } from '../store/state';
 import { currentUnit, nextNew } from '../store/progress';
 import { ui, type Session as Sess } from '../store/ui';
-import { CloseIcon, SayButton } from '../components/common';
+import { CloseIcon, SayButton, ReadingChips } from '../components/common';
+import { autoplayOn, speak } from '../lib/speech';
 import { advance, check, nextLearn, pickGrammar, pickTest, quit, startKana, startLesson, testNext } from './actions';
 
 const Top = ({ pct, label, color }: { pct: number; label: string; color?: string }) => (
@@ -19,7 +20,8 @@ function LearnCard({ it }: { it: Item }) {
       <div className="row" style={{ justifyContent: 'center', gap: 22 }}><div className="big jp">{it.ch}</div>
         {it.trad !== it.ch && <div><div className="sub">繁體</div><div style={{ fontSize: 40, color: 'var(--mute)' }}>{it.trad}</div><span className="pill red">新字體</span></div>}</div>
       <p className="sub">字義：{it.zh}。字義你已經會了，專心記讀音。</p></div>
-    <div className="read"><div><span className="sub">音讀</span><br /><b>{it.on.join('、') || '—'}</b></div><div><span className="sub">訓讀</span><br /><b>{it.kun.join('、') || '—'}</b></div></div>
+    <div className="read"><div><span className="sub">音讀</span><br /><ReadingChips list={it.on} /></div><div><span className="sub">訓讀</span><br /><ReadingChips list={it.kun} /></div></div>
+    <p className="note" style={{ margin: 0, textAlign: 'center' }}>點讀音可以聽發音</p>
   </>;
   if (it.type === 'v') return <>
     <div className="card pop" style={{ textAlign: 'center' }}><span className="sub">新單字・第 {it.unit} 單元</span>
@@ -32,11 +34,17 @@ function LearnCard({ it }: { it: Item }) {
   </>;
 }
 
+/** 這題正解要唸的日文 */
+export const sayFor = (it: QuizItem) => it.type === 'kana' ? it.ch : it.type === 'g' ? it.jp : it.type === 'v' ? it.rd : (it.kun[0] || it.on[0] || '');
+
 function Feedback({ it, kind }: { it: QuizItem; kind: Sess['kind'] }) {
-  const a = ui.answered; if (!a) return null;
-  if (a.ok) return <div className="fb ok pop"><b>答對了！</b> {it.type === 'kana' ? it.r : it.type === 'g' ? '' : answersFor(it).join('、')}</div>;
+  const a = ui.answered;
+  useEffect(() => { if (a && autoplayOn()) speak(sayFor(it)); }, [a, it]);
+  if (!a) return null;
+  const say = <span style={{ float: 'right', marginTop: -10 }}><SayButton text={sayFor(it)} /></span>;
+  if (a.ok) return <div className="fb ok pop">{say}<b>答對了！</b> {it.type === 'kana' ? it.r : it.type === 'g' ? '' : answersFor(it).join('、')}</div>;
   const right = it.type === 'kana' ? it.r : it.type === 'g' ? it.jp : answersFor(it).join('、');
-  return <div className="fb bad pop"><b>正解：</b><span className="jp">{right}</span>{it.type === 'v' && it.ff && <div style={{ marginTop: 4 }}>{it.ff}</div>}<div className="note" style={{ marginTop: 4 }}>{kind === 'kana' ? '' : '這張卡等一下會再出現一次，不扣分。'}</div></div>;
+  return <div className="fb bad pop">{say}<b>正解：</b><span className="jp">{right}</span>{it.type === 'v' && it.ff && <div style={{ marginTop: 4 }}>{it.ff}</div>}<div className="note" style={{ marginTop: 4 }}>{kind === 'kana' ? '' : '這張卡等一下會再出現一次，不扣分。'}</div></div>;
 }
 
 /** 一題測驗（打字或文法選擇）。打字內容存在元件 state，換題時以 key 重置。 */

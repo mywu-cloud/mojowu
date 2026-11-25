@@ -1,4 +1,4 @@
-import { speak } from '../lib/speech';
+import { speak, speakable } from '../lib/speech';
 
 export function Ring({ pct, color, label }: { pct: number; color: string; label: string }) {
   return (
@@ -16,6 +16,14 @@ export function SayButton({ text }: { text: string }) {
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9v6h4l5 4V5L8 9z" /><path d="M16 9a4 4 0 0 1 0 6" /></svg>
     </button>
   );
+}
+
+/** 漢字讀音列表：每個讀音是一顆可點的按鈕，點了就唸 */
+export function ReadingChips({ list }: { list: string[] }) {
+  if (!list.length) return <b>—</b>;
+  return <span className="chips">{list.map((r, i) => (
+    <button key={i} className="chip jp" data-say={speakable(r)} aria-label={`播放 ${r} 的發音`} onClick={() => speak(r)}>{r}</button>
+  ))}</span>;
 }
 
 export function CloseIcon() {
