@@ -19,7 +19,7 @@ Web Analytics 不支援自訂事件，所以學習事件自己記。
 
 程式：`app/src/lib/track.ts`（送出）、`functions/api/event.ts`（驗證與寫入；未綁 D1 時回 204 略過）。
 
-## D1 設定（一次性）
+## D1 設定（一次性；2026-11-25 已完成：資料庫 `mojowu`、events 表、Pages 繫結 `DB`）
 
 1. Cloudflare → 儲存與資料庫 → D1 → 建立資料庫，名稱 `mojowu`
 2. 在資料庫的「主控台」執行：
