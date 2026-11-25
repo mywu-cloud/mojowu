@@ -1,0 +1,70 @@
+# 路線圖與待辦
+
+## 三期
+
+| 期 | 時程 | 範圍 | 進入下一期的門檻 |
+| --- | --- | --- | --- |
+| 第一期 MVP | 第 1–3 個月 | 五十音＋發音、N5 三軌 10 單元、FSRS 複習、N5 模擬考、連續天數、新字體對照 | 封測 7 日留存達標（數字待封測資料定） |
+| 第二期 擴充 | 第 4–6 個月 | N4、N3 內容；分級測驗；週聯賽、印章收集；桌面小工具；訂閱上線 | 付費轉換達標 |
+| 第三期 進階 | 第 7–12 個月 | N2、N1 內容；聽解播放器、長文讀解；AI 作文與口說批改；完整 N5–N1 模擬考；自習室與學習小組 | — |
+
+## 封測要看的數字
+
+次日／第 7 日／第 30 日留存；N5 第 1 單元完成率；每日平均學習分鐘；實際記憶率是否接近目標。
+MVP 沒有後端，這些數字目前無法收集 → 待辦 A3。
+
+## 待辦（依優先順序，完成請打勾並在 commit 註明）
+
+### A. 封測立即需要
+
+- [x] A1 MVP 上線 mojowu.pages.dev（2026-11-25）
+- [ ] A2 App 內「關於／資料來源」頁，顯示 ATTRIBUTION（CC BY 必要）
+- [ ] A3 匿名事件紀錄：開 Cloudflare Web Analytics＋自訂事件（lesson_done、review_done、test_done），以便算留存
+- [ ] A4 意見回饋入口（連到 Google 表單或 email，顯示文字地址）
+- [ ] A5 單元 2 拆成「2a 數字」「2b 日期與時間」或 UI 標示「建議兩週」
+- [ ] A6 長音／促音打錯時提示「差一點」
+
+### B. 工程化
+
+- [ ] B1 建 `app/`：Vite + React + TS，依 `docs/ARCHITECTURE.md` §3 拆模組，功能與 MVP 對等
+- [ ] B2 單元測試：romaji、answer matching、FSRS（以現行公式做回歸）、解鎖
+- [ ] B3 localStorage `mojowu-v1` → IndexedDB 遷移
+- [ ] B4 GitHub Actions：PR 跑測試；資料 JSON schema 驗證
+- [ ] B5 Pages 改用建置（`npm run build` → `app/dist`）——改部署設定前先告知 MY
+
+### C. 帳號與同步
+
+- [ ] C1 Workers + Hono 專案（`api/`），D1 建表（`docs/API.md`）
+- [ ] C2 Email 魔法連結登入；之後 Google、Apple
+- [ ] C3 `/reviews:batch` 與 `/cards?since=` 離線同步
+- [ ] C4 刪除帳號
+
+### D. 內容
+
+- [ ] D1 日語教師校對 N5（718 單字、79 漢字、60 文法），錯誤率 < 1%
+- [ ] D2 N5 音檔（單字＋例句）放 R2，取代 TTS
+- [ ] D3 N5 模擬考題庫（自行命題，依 JLPT 題型與分項計分）
+- [ ] D4 N4 內容（`docs/DATA.md` 擴充步驟）
+
+### E. 功能（對應設計稿 6–8）
+
+- [ ] E1 新手引導（目標、程度、每日分鐘）
+- [ ] E2 分級測驗（適性出題）
+- [ ] E3 週聯賽（需後端）
+- [ ] E4 學習日曆、休息券、提醒時間設定
+- [ ] E5 印章收集與明信片
+
+### F. 上架
+
+- [ ] F1 Capacitor 包裝 iOS / Android
+- [ ] F2 推播提醒
+- [ ] F3 RevenueCat + Stripe 訂閱
+- [ ] F4 隱私權政策、App Store / Google Play 審核
+
+## 待 MY 決定
+
+- 內容來源：持續以開放資料為底＋人工校對，或購買授權內容
+- 音檔：真人錄音或高品質 TTS
+- 定價：競品 US$7–14/月；是否提供終身方案
+- repo 是否改為 private
+- 商標與網域（mojowu.app 等）

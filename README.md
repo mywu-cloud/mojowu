@@ -16,9 +16,27 @@
 
 進度目前只存在使用者自己的瀏覽器（localStorage），還沒有帳號與跨裝置同步。
 
+## 文件
+
+接手開發請先讀 **[CLAUDE.md](CLAUDE.md)**（Claude Code 會自動讀取），再依需要讀：
+
+| 文件 | 內容 |
+| --- | --- |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 現行 MVP 程式結構、狀態模型、目標架構與遷移步驟 |
+| [docs/DATA.md](docs/DATA.md) | 內容資料格式、ID 規則、建置流程 |
+| [docs/LEARNING.md](docs/LEARNING.md) | N5→N1 學習路徑、解鎖規則、FSRS |
+| [docs/API.md](docs/API.md) | 目標 API 與 D1 資料表 |
+| [docs/DESIGN.md](docs/DESIGN.md) | 設計 token、9 個畫面、留存機制 |
+| [docs/ROADMAP.md](docs/ROADMAP.md) | 路線圖與待辦清單 |
+| [docs/RESEARCH.md](docs/RESEARCH.md) | 競品分析與 JLPT 規格 |
+| [docs/DECISIONS.md](docs/DECISIONS.md) | 決策紀錄 |
+
 ## 專案結構
 
 ```
+CLAUDE.md            ← 給 Claude Code 的入口與規則
+docs/                ← 架構、資料、學習設計、API、設計、路線圖
+tests/               ← e2e.py（Playwright 冒煙測試）、romaji.test.mjs
 public/              ← Cloudflare Pages 發布的資料夾（不需要建置）
   index.html         App 本體
   data/n5.json       App 讀取的精簡課程資料
