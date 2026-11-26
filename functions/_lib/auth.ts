@@ -22,7 +22,7 @@ export function loginEmail(link: string) {
   const text = `你好！\n\n點下面的連結就能登入 mojowu（${LOGIN_TTL_MIN} 分鐘內有效，只能使用一次）：\n\n${link}\n\n如果不是你本人要求登入，請忽略這封信，帳號不會有任何變動。\n\n— mojowu 日語學習`;
   const html = `<!doctype html><html><body style="margin:0;background:#F7F3EA;font-family:'Noto Sans TC',system-ui,sans-serif;color:#1F1B16">
 <div style="max-width:480px;margin:0 auto;padding:32px 24px">
-<div style="font-weight:700;color:#C23B22;font-size:20px">mojowu</div>
+<div style="font-weight:700;color:#C23B22;font-size:20px">mojowu 魔力 日語學習</div>
 <h1 style="font-size:22px;margin:16px 0 8px">登入 mojowu</h1>
 <p style="font-size:16px;line-height:1.6;margin:0 0 24px">點下面的按鈕就能登入。連結 ${LOGIN_TTL_MIN} 分鐘內有效，只能使用一次。</p>
 <p style="margin:0 0 24px"><a href="${link}" style="display:inline-block;background:#C23B22;color:#fff;text-decoration:none;font-weight:700;padding:14px 28px;border-radius:14px">登入 mojowu</a></p>
