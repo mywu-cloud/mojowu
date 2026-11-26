@@ -13,9 +13,9 @@
 
 ## 目前狀態（2026-11-25）
 
-- **線上是 `app/`**（Vite + React + TS，v0.8.0，2026-11-25 起；見 `app/README.md`）。進度存 IndexedDB，localStorage `mojowu-v1` 為鏡像。**所有新功能做在 `app/`。**
+- **線上是 `app/`**（Vite + React + TS，v0.9.0，2026-11-25 起；見 `app/README.md`）。進度存 IndexedDB，localStorage `mojowu-v1` 為鏡像。**所有新功能做在 `app/`。**
 - **`public/index.html`（舊 MVP 單檔版）已不部署**，保留作為回退版本與 `app/test/parity.test.ts` 的對照；`public/data/` 仍是課程資料唯一來源。回退方法見 `docs/ARCHITECTURE.md` §1.6。
-- 內容：**N5**（79 漢字、718 單字、60 文法，10 單元）＋**N4**（166 漢字、668 單字、80 文法，10 單元）＋**N3**（367 漢字、2,140 單字、120 文法，20 單元）＋**N2**（367 漢字、1,906 單字、160 文法，20 單元）；使用者可自由選級（路徑頁、JLPT 頁上方的級數分頁）。N1 接著加入（ROADMAP D4d，建置流程 `docs/DATA.md`）。
+- 內容：**N5**（79 漢字、718 單字、60 文法，10 單元）＋**N4**（166 漢字、668 單字、80 文法，10 單元）＋**N3**（367 漢字、2,140 單字、120 文法，20 單元）＋**N2**（367 漢字、1,906 單字、160 文法，20 單元）＋**N1**（1,232 漢字、2,699 單字、150 文法，30 單元）；使用者可自由選級（路徑頁、JLPT 頁上方的級數分頁）。N5→N1 全部完成（建置流程 `docs/DATA.md`）。
 - 意見回饋：Google 表單「mojowu 意見回饋」（MY 的 Google 帳號，回覆在表單的「回覆」分頁），網址在 `app/src/links.ts`。
 - 帳號：Email 魔法連結登入（C2，Resend 寄信，Pages 機密 `RESEND_API_KEY`）。雲端同步（C3）：`POST /api/sync`＋`app/src/lib/sync.ts`，登入後自動同步（規則見 `docs/API.md`）。
 - `functions/`：Cloudflare Pages Functions（Hono；`/api/event` 匿名事件、`/api/health`、`/api/me`、`/api/auth/*`，見 `docs/API.md`），部署時 Pages 自動編譯；依賴在根目錄 `package.json`。D1 資料庫 `mojowu` 綁定為 `DB`，資料表在 `migrations/*.sql`（D1 主控台手動執行）。

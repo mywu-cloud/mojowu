@@ -45,7 +45,7 @@ describe('isKanaRight', () => {
   it('不接受錯的', () => expect(isKanaRight('ka', 'ga')).toBe(false));
 });
 
-for (const lv of ['n4', 'n3', 'n2'] as const) {
+for (const lv of ['n4', 'n3', 'n2', 'n1'] as const) {
   const D = expand(JSON.parse(fs.readFileSync(new URL(`../../public/data/${lv}.json`, import.meta.url), 'utf8')), lv);
   describe(`真實 ${lv.toUpperCase()} 資料：每個正解都能答對`, () => {
     it(`${D.V.length} 單字`, () => {

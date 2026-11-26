@@ -82,7 +82,7 @@ node scripts/validate_data.mjs                            # 驗證所有級數
 | --- | --- | --- |
 | `{level}_zh.txt` | `索引|繁中釋義|單元` | 索引＝原始 CSV 列序（0 起）；N4 單元依主題人工指定；N3 起省略單元欄（`索引|繁中釋義`），由 `AUTO_UNITS` 依漢字頻率自動分，標題列出代表漢字 |
 | `{level}_kanji_zh.txt` | `漢字|繁中字義` | 該級每個漢字都要有 |
-| `{level}_grammar.txt` | `句型|說明|日文例句|中文翻譯` | 依序每 `GRAMMAR_PER_UNIT` 條一個單元（N4 8 條、N3 6 條、N2 8 條） |
+| `{level}_grammar.txt` | `句型|說明|日文例句|中文翻譯` | 依序每 `GRAMMAR_PER_UNIT` 條一個單元（N4 8 條、N3 6 條、N2 8 條、N1 5 條） |
 | `{level}_false_friends.txt` | `表記|說明` | 選填，和製漢語提醒 |
 | `shinjitai_trad.json` | `{新字體: 繁體}` | 全部 JLPT 漢字共用，由 OpenCC 產生 |
 

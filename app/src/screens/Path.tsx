@@ -25,6 +25,6 @@ export function Path() {
         </button>
       );
     })}
-    <p className="note">N1 將依相同結構陸續加入。</p>
+    <p className="note">N5 到 N1 共 80 個單元。繁中釋義與例句尚未經日語教師校對。</p>
   </>;
 }
