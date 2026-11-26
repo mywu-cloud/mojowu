@@ -26,7 +26,7 @@
 - 回應：`{ serverTime, cards: <updated_at > since 的卡片>, meta }`；用戶端存 `serverTime` 當下次的 since（localStorage `mojowu-sync`），並以快照 `mojowu-sync-snap` 判斷哪些卡有變動。
 - 用戶端：`app/src/lib/sync.ts`。時機：開 App、登入成功、每回合結束（1.5 秒去彈跳）、恢復連線、回到 App 且距上次 > 1 分鐘、「立即同步」。換帳號時 since 歸零、全部重傳。
 
-**寄信**：Resend，網域 `mail.mojowu.app`（東京區，DKIM／SPF 已設，另有根網域 `_dmarc` p=none）。寄件人 `mojowu 魔力 日語學習 <login@mail.mojowu.app>`。Pages 機密 `RESEND_API_KEY`（Sending access，限 mail.mojowu.app）；可選變數 `MAIL_FROM`。登入連結格式 `https://<origin>/#login=<token>`，token 放在 # 後，不會進伺服器紀錄。
+**寄信**：Resend，網域 `mail.mojowu.app`（東京區，DKIM／SPF 已設，另有根網域 `_dmarc` p=none）。寄件人 `mojowu <login@mail.mojowu.app>`。Pages 機密 `RESEND_API_KEY`（Sending access，限 mail.mojowu.app）；可選變數 `MAIL_FROM`。登入連結格式 `https://<origin>/#login=<token>`，token 放在 # 後，不會進伺服器紀錄。
 
 ## 端點
 

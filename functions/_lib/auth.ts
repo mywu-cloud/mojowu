@@ -54,7 +54,7 @@ export function authRoutes() {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { authorization: `Bearer ${c.env.RESEND_API_KEY}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ from: c.env.MAIL_FROM || 'mojowu 魔力 日語學習 <login@mail.mojowu.app>', to: [email], subject: msg.subject, text: msg.text, html: msg.html }),
+      body: JSON.stringify({ from: c.env.MAIL_FROM || 'mojowu <login@mail.mojowu.app>', to: [email], subject: msg.subject, text: msg.text, html: msg.html }),
     });
     if (!res.ok) { console.error('resend', res.status, await res.text().catch(() => '')); return c.json({ error: 'send_failed' }, 502); }
     return c.json({ ok: true });
