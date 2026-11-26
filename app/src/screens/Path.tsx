@@ -25,6 +25,6 @@ export function Path() {
         </button>
       );
     })}
-    <p className="note">N3–N1 將依相同結構陸續加入。</p>
+    <p className="note">N2、N1 將依相同結構陸續加入。</p>
   </>;
 }

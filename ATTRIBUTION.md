@@ -3,7 +3,7 @@
 | 內容 | 來源 | 授權 |
 | --- | --- | --- |
 | 漢字讀音、筆畫、JLPT 等級 | [davidluzgouveia/kanji-data](https://github.com/davidluzgouveia/kanji-data)（`kanji.json`），讀音源自 KANJIDIC（EDRDG） | MIT；KANJIDIC 為 EDRDG 授權（CC BY-SA 4.0） |
-| N5、N4 單字與讀音 | [jamsinclair/open-anki-jlpt-decks](https://github.com/jamsinclair/open-anki-jlpt-decks)（`src/n5.csv`、`src/n4.csv`），原始清單來自 Jonathan Waller 的 [tanos.co.uk](https://www.tanos.co.uk/jlpt/) | MIT；Tanos 清單為 CC BY |
+| N5、N4、N3 單字與讀音 | [jamsinclair/open-anki-jlpt-decks](https://github.com/jamsinclair/open-anki-jlpt-decks)（`src/n5.csv`、`src/n4.csv`、`src/n3.csv`），原始清單來自 Jonathan Waller 的 [tanos.co.uk](https://www.tanos.co.uk/jlpt/) | MIT；Tanos 清單為 CC BY |
 | 新字體→繁體字對照（N4 起，`scripts/shinjitai_trad.json`） | [OpenCC](https://github.com/BYVoid/OpenCC)（以 opencc-js 的 jp→tw 轉換產生） | Apache-2.0 |
 | 繁中釋義、單元分類、和製漢語提醒、文法點與例句 | mojowu 專案自行撰寫 | — |
 

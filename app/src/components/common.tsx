@@ -19,11 +19,13 @@ export function SayButton({ text }: { text: string }) {
 }
 
 /** 漢字讀音列表：每個讀音是一顆可點的按鈕，點了就唸 */
+export const MAX_READINGS = 4;   // 卡片上最多顯示幾個（KANJIDIC 常列出很少用的讀音）；答題時全部都算對
 export function ReadingChips({ list }: { list: string[] }) {
   if (!list.length) return <b>—</b>;
-  return <span className="chips">{list.map((r, i) => (
+  const shown = list.slice(0, MAX_READINGS), more = list.length - shown.length;
+  return <span className="chips">{shown.map((r, i) => (
     <button key={i} className="chip jp" data-say={speakable(r)} aria-label={`播放 ${r} 的發音`} onClick={() => speak(r)}>{r}</button>
-  ))}</span>;
+  ))}{more > 0 && <span className="note" style={{ alignSelf: 'center' }}>另有 {more} 個少用讀音</span>}</span>;
 }
 
 export function CloseIcon() {

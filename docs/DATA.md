@@ -80,9 +80,9 @@ node scripts/validate_data.mjs                            # 驗證所有級數
 
 | 檔案 | 格式 | 說明 |
 | --- | --- | --- |
-| `{level}_zh.txt` | `索引|繁中釋義|單元` | 索引＝原始 CSV 列序（0 起）；單元依主題人工指定 |
+| `{level}_zh.txt` | `索引|繁中釋義|單元` | 索引＝原始 CSV 列序（0 起）；N4 單元依主題人工指定；N3 起省略單元欄（`索引|繁中釋義`），由 `AUTO_UNITS` 依漢字頻率自動分，標題列出代表漢字 |
 | `{level}_kanji_zh.txt` | `漢字|繁中字義` | 該級每個漢字都要有 |
-| `{level}_grammar.txt` | `句型|說明|日文例句|中文翻譯` | 依序每 8 條一個單元 |
+| `{level}_grammar.txt` | `句型|說明|日文例句|中文翻譯` | 依序每 `GRAMMAR_PER_UNIT` 條一個單元（N4 8 條、N3 6 條） |
 | `{level}_false_friends.txt` | `表記|說明` | 選填，和製漢語提醒 |
 | `shinjitai_trad.json` | `{新字體: 繁體}` | 全部 JLPT 漢字共用，由 OpenCC 產生 |
 
@@ -90,7 +90,8 @@ node scripts/validate_data.mjs                            # 驗證所有級數
 - ID：`{level}-k001`、`{level}-v0001`、`{level}-g01`（N1 漢字 4 位數）。**永不改號**；新增只能往後編。
 - 漢字單元＝第一個用到它的單字所在單元；沒被用到的漢字平均分到各單元。
 - 單字的 `requires_kanji` 包含本級與較低級的漢字 ID（高於本級的漢字不列入，直接顯示）。
-- 原始資料的讀音問題（`うんどうする` 帶「する」、欄位對調、空白）由 `clean_reading()` 修正。
+- 原始資料的讀音問題（`うんどうする` 帶「する」、欄位對調、空白）由 `clean_reading()` 修正（表記全為漢字才去掉「する」，`刷る|する` 不受影響）。
+- 漢字卡片上的讀音最多各顯示 4 個（`MAX_READINGS`），其餘註明「另有 N 個少用讀音」；答題時所有讀音都算對。
 - App 的級數清單在 `app/src/content/levels.ts` 的 `AVAILABLE`，新增一級時要加上。
 
 ## 原始資料下載
