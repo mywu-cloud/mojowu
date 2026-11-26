@@ -13,13 +13,13 @@
 
 ## 目前狀態（2026-11-25）
 
-- **線上是 `app/`**（Vite + React + TS，v0.4.0，2026-11-25 起；見 `app/README.md`）。進度存 IndexedDB，localStorage `mojowu-v1` 為鏡像。**所有新功能做在 `app/`。**
+- **線上是 `app/`**（Vite + React + TS，v0.5.0，2026-11-25 起；見 `app/README.md`）。進度存 IndexedDB，localStorage `mojowu-v1` 為鏡像。**所有新功能做在 `app/`。**
 - **`public/index.html`（舊 MVP 單檔版）已不部署**，保留作為回退版本與 `app/test/parity.test.ts` 的對照；`public/data/` 仍是課程資料唯一來源。回退方法見 `docs/ARCHITECTURE.md` §1.6。
 - 內容只有 **N5**：79 漢字、718 單字、60 文法、10 單元。
 - 意見回饋：Google 表單「mojowu 意見回饋」（MY 的 Google 帳號，回覆在表單的「回覆」分頁），網址在 `app/src/links.ts`。
-- 帳號：Email 魔法連結登入（C2，Resend 寄信，Pages 機密 `RESEND_API_KEY`）。**雲端同步（C3）尚未上線**，登入後進度仍只在本機。
+- 帳號：Email 魔法連結登入（C2，Resend 寄信，Pages 機密 `RESEND_API_KEY`）。雲端同步（C3）：`POST /api/sync`＋`app/src/lib/sync.ts`，登入後自動同步（規則見 `docs/API.md`）。
 - `functions/`：Cloudflare Pages Functions（Hono；`/api/event` 匿名事件、`/api/health`、`/api/me`、`/api/auth/*`，見 `docs/API.md`），部署時 Pages 自動編譯；依賴在根目錄 `package.json`。D1 資料庫 `mojowu` 綁定為 `DB`，資料表在 `migrations/*.sql`（D1 主控台手動執行）。
-- **下次從這裡開始：C3 雲端同步**（`GET /api/cards?since=`、`POST /api/reviews:batch`；登入後每回合上傳、開 App 時下載；同一卡以 last_review_at 較新者為準；首次登入合併本機進度；「我的」顯示同步狀態）。A、B 組已全部完成，C1、C2（Email）完成；Google／Apple 登入待上架前再做。
+- 進度：A、B 組全部完成；C1、C2（Email）、C3 完成。下一步 C4（刪除帳號、匯出資料）；Google／Apple 登入待上架前再做。
 
 ## 文件地圖
 
@@ -79,7 +79,7 @@ python3 scripts/build_xlsx.py content/n5.json content/N5_content.xlsx
 
 ## 已知限制與地雷
 
-- 沒有帳號：清除瀏覽器資料＝進度消失。我的頁面有「複製進度／貼上還原」做手動備份。
+- 沒登入時：清除瀏覽器資料＝進度消失（「我的」有「複製進度／貼上還原」）。登入後進度自動備份到雲端。
 - 單元 2「數字與時間」漢字特別多（28 字），UI 已標示「建議兩週」（`HEAVY_K` 門檻）；沒有拆成兩個單元。
 - 單字中非 N5 漢字（如 駅、鉛筆）不列入解鎖條件，直接顯示。
 - 字典資料的英文釋義保留在 `content/n5.json` 但 App 不用。
