@@ -20,7 +20,7 @@
 | 14 | 2026-11-25 | `app/` 與 MVP 並存，暫不改 Pages 部署 | 切換部署需改 Pages 設定（B5），先讓 MY 確認；並存期間兩邊共用課程資料與 e2e | 直接以 app 取代 MVP |
 | 15 | 2026-11-25 | 畫面狀態用自寫的 `bump()`＋`useSyncExternalStore`，不引入狀態管理套件 | 與 MVP 結構一一對應、移植風險最低、零依賴 | Zustand、Redux |
 | 20 | 2026-11-26 | 同步用單一 `POST /api/sync`（上傳變動＋下載變動一次完成），以 last_review_at 較新者合併，FSRS 不在伺服器重算 | 一次往返、冪等、離線補傳簡單；排程由用戶端計算（docs/API.md 原則），兩台裝置同時複習同一卡的機率低，取較新的一次即可。reviews 仍完整保存，日後可在伺服器重算 | 草案的 GET cards＋POST reviews:batch 兩支、伺服器依 reviews 重算 FSRS |
-| 19 | 2026-11-25 | 首頁抬頭顯示「mojowu 魔力無限」，其他地方維持 mojowu | MY 決定（只改抬頭） | 全面改名 |
+| 19 | 2026-11-25 | 首頁抬頭顯示「mojowu 魔力無限」（2026-11-26 改為「mojowu 魔力 日語學習」），其他地方維持 mojowu | MY 決定（只改抬頭） | 全面改名 |
 | 18 | 2026-11-25 | 正式網域 mojowu.app（Cloudflare Registrar，首年 $1、續約 $14.20/年）；~~C3 完成前不導轉~~ → **同日更新：pages.dev 上只有 MY 自己測試，直接 301 轉址到 mojowu.app，MY 不保留 pages.dev 的測試進度** | 寄登入信需驗證自有網域；上架也需正式網域。瀏覽器的 IndexedDB／localStorage 依網址分開，直接導轉會讓封測者看不到進度——等登入＋同步上線，在舊網址登入上傳後再到新網址登入取回，之後才把 pages.dev 導向 mojowu.app | mojowu.com（已被註冊）；用 pinncafe.com 子網域寄信 |
 | 17 | 2026-11-25 | API 放在同一個 Pages 專案的 Pages Functions（`functions/`，Hono），不另開 Worker | 同源免 CORS、沿用已綁定的 D1、一次部署；Pages Functions 底層就是 Workers，日後要拆出也容易 | 獨立 Workers 專案＋自訂網域 |
 | 16 | 2026-11-25 | IndexedDB 為主、localStorage `mojowu-v1` 保留為同步鏡像，啟動時取 savedAt 較新者 | IndexedDB 非同步寫入，App 被關掉時最後一題可能沒寫完，鏡像可救回；B5 後若需回退 MVP，進度仍可用 | 遷移後刪除 localStorage；只用 IndexedDB |
