@@ -14,11 +14,17 @@
 | `GET /api/health` | ✅ C1：D1 是否綁定、資料表是否齊全 |
 | `GET /api/me`、`PATCH /api/me` | ✅ C1（需登入；PATCH 可改 targetRetention、timezone、displayName、goal、dailyMinutes） |
 | `POST /api/auth/magic-link`、`/api/auth/verify`、`/api/auth/logout` | ✅ C2（`functions/_lib/auth.ts`）：連結 15 分鐘、一次性、每 email 每小時 5 封；連結指向請求的 origin（白名單：mojowu.app、mojowu.pages.dev、預覽網址、localhost） |
-| `GET /api/cards`、`POST /api/reviews:batch` | C3 |
+| `POST /api/sync` | ✅ C3（`functions/_lib/sync.ts`）：一次往返雙向同步，取代草案的 `GET /cards?since=` 與 `POST /reviews:batch`（見 DECISIONS 20）。需要 `migrations/0002_sync.sql` |
 | `DELETE /api/me` | C4 |
 | 其餘 | 依功能需要再加 |
 
 **Session**：登入後發給隨機 token，伺服器只存 SHA-256；有效 90 天，每天第一次使用時展延。前端存在 localStorage `mojowu-session`（`app/src/lib/account.ts`）。
+
+**同步**（`POST /api/sync`，需登入）
+- 請求：`{ since, cards: {<itemId>: {s,d,due,reps,lapses,last,ok}}, reviews: [{id,item,at,rating,source}], meta: {streak,lastDay,kana,log,target,targetAt} }`。cards 只送自上次同步後有變動的；reviews 是尚未上傳的作答（用戶端 localStorage `mojowu-pending`）。
+- 合併：卡片以 `last_review_at` 較新者為準，相同時取 `due_at` 較早者；reviews 以 id 去重；`daily_stats.reviews` 取較大值；streak 取 `last_day` 較晚者（同日取大）；kana 取大；目標記憶率取 `target_at` 較新者。全部可重送（冪等）。
+- 回應：`{ serverTime, cards: <updated_at > since 的卡片>, meta }`；用戶端存 `serverTime` 當下次的 since（localStorage `mojowu-sync`），並以快照 `mojowu-sync-snap` 判斷哪些卡有變動。
+- 用戶端：`app/src/lib/sync.ts`。時機：開 App、登入成功、每回合結束（1.5 秒去彈跳）、恢復連線、回到 App 且距上次 > 1 分鐘、「立即同步」。換帳號時 since 歸零、全部重傳。
 
 **寄信**：Resend，網域 `mail.mojowu.app`（東京區，DKIM／SPF 已設，另有根網域 `_dmarc` p=none）。寄件人 `mojowu <login@mail.mojowu.app>`。Pages 機密 `RESEND_API_KEY`（Sending access，限 mail.mojowu.app）；可選變數 `MAIL_FROM`。登入連結格式 `https://<origin>/#login=<token>`，token 放在 # 後，不會進伺服器紀錄。
 

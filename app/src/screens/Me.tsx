@@ -4,6 +4,7 @@ import { analyticsOn, setAnalytics } from '../lib/track';
 import { FEEDBACK_URL } from '../links';
 import { AccountCard } from '../components/AccountCard';
 import { autoplayOn, setAutoplay, japaneseVoice, speak } from '../lib/speech';
+import { touchTarget, scheduleSync } from '../lib/sync';
 
 export function Me() {
   const all = Object.values(S.cards), dayKeys = Object.keys(S.log).length;
@@ -17,7 +18,7 @@ export function Me() {
       <div className="stat" style={{ background: 'var(--bg)' }}><b>{dayKeys}</b><span>學習天數</span></div></div></section>
     <AccountCard />
     <section className="card"><label htmlFor="tg">目標記憶率</label><p className="sub" style={{ margin: '2px 0 8px' }}>越高記得越牢，但每天複習越多。</p>
-      <select id="tg" value={S.target} onChange={e => { S.target = +e.target.value; save(); bump(); }}>{[.85, .9, .95].map(v => <option key={v} value={v}>{v * 100}%</option>)}</select></section>
+      <select id="tg" value={S.target} onChange={e => { S.target = +e.target.value; touchTarget(); save(); scheduleSync(); bump(); }}>{[.85, .9, .95].map(v => <option key={v} value={v}>{v * 100}%</option>)}</select></section>
     <section className="card"><h2>日語發音</h2>
       <label className="row between" style={{ fontWeight: 400, marginTop: 6 }}><span>答題後自動唸出正解</span>
         <input type="checkbox" id="ap" style={{ width: 24, height: 24, flex: 'none' }} checked={autoplayOn()} onChange={e => { setAutoplay(e.target.checked); bump(); }} /></label>

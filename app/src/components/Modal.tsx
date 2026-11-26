@@ -19,7 +19,7 @@ export function Modal() {
   if (!m) return <div id="modal" />;
   let body: JSX.Element;
   if (m.kind === 'toast') {
-    body = <><p style={{ marginTop: 0 }}>{m.text}</p><button className="indigo" data-act="close" onClick={closeModal}>知道了</button></>;
+    body = <><p style={{ marginTop: 0, whiteSpace: 'pre-line' }}>{m.text}</p><button className="indigo" data-act="close" onClick={closeModal}>知道了</button></>;
   } else if (m.kind === 'confirm') {
     body = <><p style={{ marginTop: 0 }}>{m.text}</p><div className="row"><button className="ghost" data-act="close" onClick={closeModal}>取消</button><button className="primary" data-act="ok" onClick={() => { m.onOk(); ui.modal = null; bump(); }}>確定</button></div></>;
   } else body = <RestoreBox />;

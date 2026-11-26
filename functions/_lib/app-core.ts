@@ -4,7 +4,7 @@ import { type Env, type D1, sha256 } from './db';
 
 export interface User {
   id: string; email: string; display_name: string | null; plan: string; target_retention: number; timezone: string;
-  goal: string | null; daily_minutes: number | null; streak: number; last_day: string | null; kana: number; created_at: number; updated_at: number;
+  goal: string | null; daily_minutes: number | null; streak: number; last_day: string | null; kana: number; target_at?: number; created_at: number; updated_at: number;
 }
 type Vars = { user: User; db: D1 };
 export type AppEnv = { Bindings: Env; Variables: Vars };

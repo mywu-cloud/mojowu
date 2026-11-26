@@ -38,7 +38,7 @@ describe('account', () => {
     expect(calls[0]).toMatchObject({ url: '/api/auth/verify', body: { token: 'a'.repeat(43) } });
     expect(A.account.session?.email).toBe('me@example.com');
     expect(JSON.parse(localStorage.getItem('mojowu-session')!).email).toBe('me@example.com');
-    expect(ui.view).toBe('me'); expect(ui.modal).toMatchObject({ kind: 'toast', text: '登入成功！me@example.com' });
+    expect(ui.view).toBe('me'); expect(ui.modal).toMatchObject({ kind: 'toast', text: expect.stringContaining('登入成功！me@example.com') });
   });
   it('過期連結 → 提示重寄、不登入', async () => {
     location.hash = '#login=' + 'a'.repeat(43);

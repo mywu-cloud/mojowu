@@ -3,6 +3,7 @@
 import { Hono } from 'hono';
 import { needDB, auth, type AppEnv, type User } from './app-core';
 import { authRoutes } from './auth';
+import { syncRoutes } from './sync';
 export { auth, SESSION_DAYS, type AppEnv, type User } from './app-core';
 
 const publicUser = (u: User) => ({
@@ -28,6 +29,9 @@ export function createApp() {
 
   app.use('/auth/*', needDB);
   app.route('/auth', authRoutes());
+
+  app.use('/sync', needDB, auth);
+  app.route('/sync', syncRoutes());
 
   app.use('/me', needDB, auth);
   app.use('/me/*', needDB, auth);

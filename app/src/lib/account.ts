@@ -1,5 +1,5 @@
 // C2：帳號（Email 魔法連結）。session token 存 localStorage「mojowu-session」，與學習進度分開。
-// 雲端同步（C3）尚未上線：登入後目前只會記住帳號，進度仍存在本機。
+// 登入後由 lib/sync.ts 做雲端同步（C3）。
 import { ui, bump } from '../store/ui';
 
 const KEY = 'mojowu-session';
@@ -48,7 +48,8 @@ export async function handleLoginLink(): Promise<boolean> {
   try {
     const r = await api<{ token: string; user: { email: string } }>('/auth/verify', { method: 'POST', body: JSON.stringify({ token: m[1] }) });
     account.session = { token: r.token, email: r.user.email }; ls.set(account.session);
-    ui.modal = { kind: 'toast', text: `登入成功！${r.user.email}` };
+    ui.modal = { kind: 'toast', text: `登入成功！${r.user.email}\n正在同步學習進度…` };
+    (await import('./sync')).runSync();
   } catch (e) {
     ui.modal = { kind: 'toast', text: msg((e as Error).message) };
   }
@@ -58,5 +59,7 @@ export async function handleLoginLink(): Promise<boolean> {
 
 export async function logout() {
   try { await api('/auth/logout', { method: 'POST', body: '{}' }); } catch { /* 離線也照樣登出本機 */ }
-  account.session = null; account.sentTo = ''; ls.set(null); bump();
+  account.session = null; account.sentTo = ''; ls.set(null);
+  (await import('./sync')).resetSync();
+  bump();
 }
