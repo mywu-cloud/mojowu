@@ -28,11 +28,15 @@ jobs:
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
-          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE:public/data/n5.json" 2>/dev/null; then
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
             echo "沒有可比對的基準版，略過"; exit 0
           fi
-          git show "$BASE:public/data/n5.json" > /tmp/base.json
-          node scripts/validate_data.mjs --baseline /tmp/base.json
+          for lv in n5 n4 n3 n2 n1; do
+            if git cat-file -e "$BASE:public/data/$lv.json" 2>/dev/null; then
+              git show "$BASE:public/data/$lv.json" > /tmp/base-$lv.json
+              node scripts/validate_data.mjs --level $lv --baseline /tmp/base-$lv.json
+            fi
+          done
 
   app:
     name: app 單元測試與建置

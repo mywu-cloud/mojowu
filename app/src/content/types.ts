@@ -14,4 +14,5 @@ export type RawData = {
   v: [string, number, string, string, string, string[], string][];
   g: [string, number, string, string, string, string][];
 };
-export interface Content { UNITS: Unit[]; ITEMS: Record<string, Item>; K: Kanji[]; V: Vocab[]; G: Grammar[] }
+import type { Level } from './levels';
+export interface Content { level: Level; UNITS: Unit[]; ITEMS: Record<string, Item>; K: Kanji[]; V: Vocab[]; G: Grammar[] }

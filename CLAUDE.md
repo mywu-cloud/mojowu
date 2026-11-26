@@ -13,9 +13,9 @@
 
 ## 目前狀態（2026-11-25）
 
-- **線上是 `app/`**（Vite + React + TS，v0.5.0，2026-11-25 起；見 `app/README.md`）。進度存 IndexedDB，localStorage `mojowu-v1` 為鏡像。**所有新功能做在 `app/`。**
+- **線上是 `app/`**（Vite + React + TS，v0.6.0，2026-11-25 起；見 `app/README.md`）。進度存 IndexedDB，localStorage `mojowu-v1` 為鏡像。**所有新功能做在 `app/`。**
 - **`public/index.html`（舊 MVP 單檔版）已不部署**，保留作為回退版本與 `app/test/parity.test.ts` 的對照；`public/data/` 仍是課程資料唯一來源。回退方法見 `docs/ARCHITECTURE.md` §1.6。
-- 內容只有 **N5**：79 漢字、718 單字、60 文法、10 單元。
+- 內容：**N5**（79 漢字、718 單字、60 文法）＋**N4**（166 漢字、668 單字、80 文法），各 10 單元；使用者可自由選級（路徑頁、JLPT 頁上方的級數分頁）。N3–N1 逐級加入（ROADMAP D4b–d，建置流程 `docs/DATA.md`）。
 - 意見回饋：Google 表單「mojowu 意見回饋」（MY 的 Google 帳號，回覆在表單的「回覆」分頁），網址在 `app/src/links.ts`。
 - 帳號：Email 魔法連結登入（C2，Resend 寄信，Pages 機密 `RESEND_API_KEY`）。雲端同步（C3）：`POST /api/sync`＋`app/src/lib/sync.ts`，登入後自動同步（規則見 `docs/API.md`）。
 - `functions/`：Cloudflare Pages Functions（Hono；`/api/event` 匿名事件、`/api/health`、`/api/me`、`/api/auth/*`，見 `docs/API.md`），部署時 Pages 自動編譯；依賴在根目錄 `package.json`。D1 資料庫 `mojowu` 綁定為 `DB`，資料表在 `migrations/*.sql`（D1 主控台手動執行）。
@@ -58,7 +58,10 @@ npm ci
 cd app && npm install && npm run dev      # http://localhost:5173
 cd app && npm test && npm run build       # vitest＋產出 app/dist
 
-# 重建資料（改了 scripts/n5_zh.txt 或 scripts/build_data.py 之後）
+# 建置 N4 以上（改了 scripts/n4_*.txt 等之後；見 docs/DATA.md）
+python3 scripts/build_level.py n4 <kanji.json> <n4.csv>
+
+# 重建 N5 資料（改了 scripts/n5_zh.txt 或 scripts/build_data.py 之後）
 python3 scripts/build_data.py <kanji.json> <n5.csv> scripts/n5_zh.txt content/n5.json
 python3 scripts/build_app_data.py content/n5.json public/data/n5.json
 python3 scripts/build_xlsx.py content/n5.json content/N5_content.xlsx
@@ -71,7 +74,7 @@ python3 scripts/build_xlsx.py content/n5.json content/N5_content.xlsx
 1. **UI 文字一律繁體中文（台灣用語）**；日文用 `Noto Serif JP`，介面用 `Noto Sans TC`。
 2. **改了 `public/index.html` 或 `public/data/*` 必須調高 `public/sw.js` 的 `VERSION`**，否則使用者會一直拿到舊快取。`app/` 則調高 `app/public/sw.js`。
 3. **不要改 localStorage 的 key（`mojowu-v1`）或 `S` 的欄位意義**而不寫遷移；封測者的進度只存在他們手機上。app/ 的進度存在 IndexedDB `mojowu`（localStorage 為鏡像），改資料表要調高 `DB_VERSION` 並依 oldVersion 逐步遷移（`app/src/store/db.ts`）。
-4. **內容 ID 永遠不可重用或改號**（`k001`、`v0001`、`g01`），使用者卡片以 ID 對應。新增內容往後編號。
+4. **內容 ID 永遠不可重用或改號**（N5：`k001`、`v0001`、`g01`；N4 起加前綴 `n4-k001`），使用者卡片以 ID 對應。新增內容往後編號。
 5. **資料來源授權**：不得使用 WaniKani 的部件名稱與記憶口訣（有著作權）；JLPT 官方考題不得收錄。新資料來源先寫進 `ATTRIBUTION.md`。
 6. MVP：所有使用者看得到的資料字串都要經過 `esc()` 再塞進 HTML。app：交給 React 跳脫，不准用 `dangerouslySetInnerHTML`。
 7. 每次改動跑 `tests/e2e.py` 確認 `errors: []`（MVP 與 app/dist 都可跑）；改 `app/` 另跑 `npm test`；改資料另跑 `scripts/validate_data.mjs`。PR 與 push `main` 時 GitHub Actions（`.github/workflows/ci.yml`）會自動跑全部。

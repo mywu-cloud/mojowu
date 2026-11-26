@@ -68,6 +68,31 @@
 4. 單字單元＝max(人工單元, 所需漢字的單元)。因規則 2，實際上不會被延後。
 5. 建置時會印出各單元數量；失衡時調整 `n5_zh.txt` 的單元欄。
 
+## N4 之後的級數（`scripts/build_level.py`）
+
+```bash
+curl -L -o n4.csv https://raw.githubusercontent.com/jamsinclair/open-anki-jlpt-decks/main/src/n4.csv
+python3 scripts/build_level.py n4 kanji.json n4.csv      # 產生 content/n4.json 與 public/data/n4.json
+node scripts/validate_data.mjs                            # 驗證所有級數
+```
+
+每一級需要的手寫檔（`scripts/`）：
+
+| 檔案 | 格式 | 說明 |
+| --- | --- | --- |
+| `{level}_zh.txt` | `索引|繁中釋義|單元` | 索引＝原始 CSV 列序（0 起）；單元依主題人工指定 |
+| `{level}_kanji_zh.txt` | `漢字|繁中字義` | 該級每個漢字都要有 |
+| `{level}_grammar.txt` | `句型|說明|日文例句|中文翻譯` | 依序每 8 條一個單元 |
+| `{level}_false_friends.txt` | `表記|說明` | 選填，和製漢語提醒 |
+| `shinjitai_trad.json` | `{新字體: 繁體}` | 全部 JLPT 漢字共用，由 OpenCC 產生 |
+
+- 單元標題在 `build_level.py` 的 `UNIT_TITLES`。
+- ID：`{level}-k001`、`{level}-v0001`、`{level}-g01`（N1 漢字 4 位數）。**永不改號**；新增只能往後編。
+- 漢字單元＝第一個用到它的單字所在單元；沒被用到的漢字平均分到各單元。
+- 單字的 `requires_kanji` 包含本級與較低級的漢字 ID（高於本級的漢字不列入，直接顯示）。
+- 原始資料的讀音問題（`うんどうする` 帶「する」、欄位對調、空白）由 `clean_reading()` 修正。
+- App 的級數清單在 `app/src/content/levels.ts` 的 `AVAILABLE`，新增一級時要加上。
+
 ## 原始資料下載
 
 ```bash

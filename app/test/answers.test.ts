@@ -45,6 +45,24 @@ describe('isKanaRight', () => {
   it('不接受錯的', () => expect(isKanaRight('ka', 'ga')).toBe(false));
 });
 
+for (const lv of ['n4'] as const) {
+  const D = expand(JSON.parse(fs.readFileSync(new URL(`../../public/data/${lv}.json`, import.meta.url), 'utf8')), lv);
+  describe(`真實 ${lv.toUpperCase()} 資料：每個正解都能答對`, () => {
+    it(`${D.V.length} 單字`, () => {
+      const bad = D.V.filter(it => !answersFor(it).length || !answersFor(it).every(a => isRight(it, a)));
+      expect(bad.map(x => `${x.id} ${x.rd}`)).toEqual([]);
+    });
+    it(`${D.K.length} 漢字`, () => {
+      const bad = D.K.filter(it => !answersFor(it).length || !answersFor(it).every(a => isRight(it, a)));
+      expect(bad.map(x => x.id)).toEqual([]);
+    });
+    it('正解經過 norm 後只剩假名', () => {
+      const odd = [...D.V, ...D.K].flatMap(it => answersFor(it).map(a => [it.id, norm(a)] as const)).filter(([, a]) => !/^[ぁ-ゖー]+$/.test(a));
+      expect(odd).toEqual([]);
+    });
+  });
+}
+
 describe('真實 N5 資料：每個正解都能答對', () => {
   it(`${C.V.length} 單字`, () => {
     const bad = C.V.filter(it => !answersFor(it).length || !answersFor(it).every(a => isRight(it, a)));
