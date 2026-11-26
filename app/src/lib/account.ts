@@ -1,5 +1,5 @@
 // C2：帳號（Email 魔法連結）。session token 存 localStorage「mojowu-session」，與學習進度分開。
-// 登入後由 lib/sync.ts 做雲端同步（C3）。
+// 登入後由 lib/sync.ts 做雲端同步（C3）。C4：deleteAccount() 刪除帳號與雲端資料（本機進度保留）。
 import { ui, bump } from '../store/ui';
 
 const KEY = 'mojowu-session';
@@ -62,4 +62,18 @@ export async function logout() {
   account.session = null; account.sentTo = ''; ls.set(null);
   (await import('./sync')).resetSync();
   bump();
+}
+
+/** C4：刪除帳號與所有雲端資料。成功後本機變回未登入，學習進度留在這台裝置。 */
+export async function deleteAccount(): Promise<boolean> {
+  const email = account.session?.email ?? '';
+  try { await api('/me', { method: 'DELETE' }); }
+  catch (e) {
+    ui.modal = { kind: 'toast', text: account.session ? `刪除失敗：${msg((e as Error).message)}` : '登入已過期，請重新登入後再刪除帳號。' };
+    bump(); return false;
+  }
+  account.session = null; account.sentTo = ''; ls.set(null);
+  (await import('./sync')).resetSync();
+  ui.modal = { kind: 'toast', text: `帳號 ${email} 與雲端上的學習資料已刪除。\n這台裝置上的進度仍保留；不需要的話，可以在「我的」最下方按「清除所有進度」。` };
+  bump(); return true;
 }

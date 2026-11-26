@@ -37,7 +37,7 @@
 - [x] C1 Workers + Hono 專案（`api/`），D1 建表（`docs/API.md`）（2026-11-25；改用同專案 Pages Functions，`functions/`＋`migrations/0001_accounts.sql`，見 DECISIONS 17）
 - [ ] C2 Email 魔法連結登入；之後 Google、Apple（2026-11-25：Email 魔法連結 ✅，「我的」頁登入卡片；Google、Apple 待做）
 - [x] C3 `/reviews:batch` 與 `/cards?since=` 離線同步（2026-11-26；合併成單一 `POST /api/sync`，見 DECISIONS 20）
-- [ ] C4 刪除帳號
+- [x] C4 刪除帳號（2026-11-26：`DELETE /api/me`＋「我的」刪除帳號；隱私權政策 `app/public/privacy.html`（/privacy.html，含刪除步驟 #delete，可當 Google Play 的刪除網址）。匯出資料暫不做，已有「複製進度」）
 
 ### D. 內容
 

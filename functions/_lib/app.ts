@@ -1,5 +1,5 @@
 // mojowu API（Hono）。部署為 Pages Functions：functions/api/[[route]].ts 把 /api/* 交給這裡。
-// 端點規格見 docs/API.md。C1：/health、/me；C2：/auth/*（auth.ts）。C3 同步、C4 刪除帳號在後續加入。
+// 端點規格見 docs/API.md。C1：/health、/me；C2：/auth/*（auth.ts）。C3：/sync（sync.ts）；C4：DELETE /me 刪除帳號。
 import { Hono } from 'hono';
 import { needDB, auth, type AppEnv, type User } from './app-core';
 import { authRoutes } from './auth';
@@ -59,6 +59,24 @@ export function createApp() {
     await c.get('db').prepare(`UPDATE users SET ${sets.join(', ')} WHERE id = ?${vals.length}`).bind(...vals).run();
     const fresh = await c.get('db').prepare('SELECT * FROM users WHERE id = ?1').bind(u.id).first<User>();
     return c.json(publicUser(fresh!));
+  });
+
+  /** C4：刪除帳號與所有雲端資料（App Store 5.1.1(v)、Google Play 帳號刪除規定）。
+   *  不靠 ON DELETE CASCADE（各表明確刪除），整批在同一個交易內完成。匿名事件（events）不含帳號資訊，無從對應，不在此刪除。 */
+  app.delete('/me', async c => {
+    const u = c.get('user'), db = c.get('db');
+    const del = (sql: string, v: string) => db.prepare(sql).bind(v);
+    await db.batch([
+      del('DELETE FROM reviews WHERE user_id = ?1', u.id),
+      del('DELETE FROM cards WHERE user_id = ?1', u.id),
+      del('DELETE FROM daily_stats WHERE user_id = ?1', u.id),
+      del('DELETE FROM mock_results WHERE user_id = ?1', u.id),
+      del('DELETE FROM league_members WHERE user_id = ?1', u.id),
+      del('DELETE FROM sessions WHERE user_id = ?1', u.id),
+      del('DELETE FROM login_tokens WHERE email = ?1', u.email),
+      del('DELETE FROM users WHERE id = ?1', u.id),
+    ]);
+    return c.json({ ok: true, deleted: true });
   });
 
   return app;

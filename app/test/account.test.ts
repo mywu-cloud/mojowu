@@ -69,4 +69,27 @@ describe('account', () => {
     await expect(A.api('/me')).rejects.toThrow('unauthorized');
     expect(A.account.session).toBeNull();
   });
+  it('刪除帳號：DELETE /api/me 成功 → 登出本機、清同步狀態、保留學習進度', async () => {
+    localStorage.setItem('mojowu-session', JSON.stringify({ token: 'sess_x', email: 'me@example.com' }));
+    localStorage.setItem('mojowu-sync', '123'); localStorage.setItem('mojowu-v1', '{"cards":{"k001":{}}}');
+    const A = await import('../src/lib/account');
+    const { ui } = await import('../src/store/ui');
+    reply = () => [200, { ok: true, deleted: true }];
+    expect(await A.deleteAccount()).toBe(true);
+    expect(calls[0]).toMatchObject({ url: '/api/me', auth: 'Bearer sess_x' });
+    expect(A.account.session).toBeNull();
+    expect(localStorage.getItem('mojowu-session')).toBeNull();
+    expect(localStorage.getItem('mojowu-sync')).toBeNull();
+    expect(localStorage.getItem('mojowu-v1')).toContain('k001');
+    expect(ui.modal).toMatchObject({ kind: 'toast' });
+  });
+  it('刪除帳號失敗 → 仍登入、顯示錯誤', async () => {
+    localStorage.setItem('mojowu-session', JSON.stringify({ token: 'sess_x', email: 'me@example.com' }));
+    const A = await import('../src/lib/account');
+    const { ui } = await import('../src/store/ui');
+    reply = () => [500, { error: 'internal' }];
+    expect(await A.deleteAccount()).toBe(false);
+    expect(A.account.session?.email).toBe('me@example.com');
+    expect((ui.modal as { text: string }).text).toMatch(/^刪除失敗/);
+  });
 });

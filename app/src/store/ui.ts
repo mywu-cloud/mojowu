@@ -14,7 +14,7 @@ export type Session =
   | { kind: 'test'; queue: TestQ[]; i: number; res: { q: TestQ; ok: boolean }[]; total: number };
 export interface Answered { ok: boolean; typed: string; pick?: number }
 export interface TestResult { sec: { name: string; n: number; got: number }[]; wrongs: { q: string; a: string }[] }
-export type Modal = { kind: 'toast'; text: string } | { kind: 'confirm'; text: string; onOk: () => void } | { kind: 'restore' };
+export type Modal = { kind: 'toast'; text: string } | { kind: 'confirm'; text: string; onOk: () => void } | { kind: 'restore' } | { kind: 'deleteAccount' };
 
 export const ui = {
   view: 'home' as View,

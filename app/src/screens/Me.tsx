@@ -3,6 +3,7 @@ import { ui, bump } from '../store/ui';
 import { analyticsOn, setAnalytics } from '../lib/track';
 import { FEEDBACK_URL } from '../links';
 import { AccountCard } from '../components/AccountCard';
+import { account } from '../lib/account';
 import { autoplayOn, setAutoplay, japaneseVoice, speak } from '../lib/speech';
 import { touchTarget, scheduleSync } from '../lib/sync';
 
@@ -25,7 +26,7 @@ export function Me() {
       <button className="ghost" style={{ marginTop: 10 }} onClick={() => speak('こんにちは')}>試聽「こんにちは」</button>
       {japaneseVoice() === 'no' && <div className="warn" style={{ marginTop: 10 }}><b>這台裝置沒有日語語音</b>，發音可能不正確。安裝方法：<br />iPhone／iPad：設定 → 輔助使用 → 朗讀內容 → 聲音 → 日文<br />Android：設定 → 系統 → 語言 → 文字轉語音 → 安裝日文語音資料<br />Windows：設定 → 時間與語言 → 語音 → 新增語音 → 日本語</div>}
       <p className="note" style={{ margin: '8px 0 0' }}>發音使用裝置內建的語音合成，音質依裝置而異。</p></section>
-    <section className="card"><h2>備份進度</h2><p className="sub">進度只存在這個瀏覽器{storage.backend === 'indexedDB' ? '（IndexedDB）' : ''}。複製後可貼回來還原。</p>
+    <section className="card"><h2>備份進度</h2><p className="sub">進度存在這個瀏覽器{storage.backend === 'indexedDB' ? '（IndexedDB）' : ''}{account.session ? '，也已備份到雲端' : '，未登入時不會上傳'}。複製後可貼回來還原。</p>
       <div className="row wrap"><button className="ghost" data-act="copy" onClick={copy}>複製進度</button><button className="ghost" data-act="restore" onClick={() => { ui.modal = { kind: 'restore' }; bump(); }}>貼上還原</button></div><div id="msg" className="note">{ui.msg}</div></section>
     <section className="card"><label className="row between" style={{ fontWeight: 400 }}><span><b>傳送匿名使用統計</b><br /><span className="sub">只記「上完一課」這類事件與隨機代號，用來改善課程。不含個人資料。</span></span>
       <input type="checkbox" id="an" style={{ width: 24, height: 24, flex: 'none' }} checked={analyticsOn()} onChange={e => { setAnalytics(e.target.checked); bump(); }} /></label></section>

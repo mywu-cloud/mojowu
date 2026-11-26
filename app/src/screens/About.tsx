@@ -8,8 +8,8 @@ export const SOURCES = [
   { what: '漢字讀音、筆畫、JLPT 等級', name: 'kanji-data', by: 'David Luz Gouveia', url: 'https://github.com/davidluzgouveia/kanji-data', lic: 'MIT' },
   { what: '新字體→繁體字對照', name: 'OpenCC', by: 'BYVoid 與 OpenCC 貢獻者', url: 'https://github.com/BYVoid/OpenCC', lic: 'Apache-2.0' },
   { what: '漢字讀音原始資料', name: 'KANJIDIC', by: 'Electronic Dictionary Research and Development Group（EDRDG）', url: 'https://www.edrdg.org/wiki/index.php/KANJIDIC_Project', lic: 'CC BY-SA 4.0（EDRDG 授權）', licUrl: 'https://www.edrdg.org/edrdg/licence.html' },
-  { what: 'N5 單字與讀音（整理版）', name: 'open-anki-jlpt-decks', by: 'jamsinclair', url: 'https://github.com/jamsinclair/open-anki-jlpt-decks', lic: 'MIT' },
-  { what: 'N5 單字原始清單', name: 'Tanos JLPT 清單', by: 'Jonathan Waller（tanos.co.uk）', url: 'https://www.tanos.co.uk/jlpt/', lic: 'CC BY', licUrl: 'https://creativecommons.org/licenses/by/4.0/deed.zh-hant' },
+  { what: 'N5–N1 單字與讀音（整理版）', name: 'open-anki-jlpt-decks', by: 'jamsinclair', url: 'https://github.com/jamsinclair/open-anki-jlpt-decks', lic: 'MIT' },
+  { what: 'JLPT 單字原始清單', name: 'Tanos JLPT 清單', by: 'Jonathan Waller（tanos.co.uk）', url: 'https://www.tanos.co.uk/jlpt/', lic: 'CC BY', licUrl: 'https://creativecommons.org/licenses/by/4.0/deed.zh-hant' },
 ];
 const Ext = ({ u, t }: { u: string; t: string }) => <a href={u} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--blue)' }}>{t}</a>;
 
@@ -24,6 +24,6 @@ export function About() {
       <p className="note" style={{ margin: '6px 0 0' }}>kanji-data 中的 WaniKani 欄位未使用。</p></section>
     <section className="card"><h2>本專案自行撰寫</h2><p className="sub" style={{ margin: '4px 0 0' }}>繁中釋義、單元分類、新字體對照、和製漢語提醒、文法點與例句。目前<b>尚未經日語教師校對</b>，如發現錯誤歡迎<Ext u={FEEDBACK_URL} t="填寫意見回饋表單" />。</p></section>
     <section className="card"><h2>關於 JLPT 範圍</h2><p className="sub" style={{ margin: '4px 0 0' }}>JLPT 自 2010 年起不公布官方字表，本 App 各級範圍是依歷屆考題整理的業界估計。練習題為自行命題，未收錄官方考題，分數也不是官方換算。</p></section>
-    <section className="card"><h2>其他</h2><p className="sub" style={{ margin: '4px 0 0' }}>字型：Noto Sans TC、Noto Serif JP（SIL Open Font License）。發音使用裝置內建語音合成。學習進度只存在這個瀏覽器，不會上傳。網站使用 Cloudflare Web Analytics 統計瀏覽量（不使用 Cookie）；App 另會傳送匿名學習事件（如「上完一課」）與隨機代號以計算留存，不含個人資料，可在「我的」關閉。</p></section>
+    <section className="card"><h2>其他</h2><p className="sub" style={{ margin: '4px 0 0' }}>字型：Noto Sans TC、Noto Serif JP（SIL Open Font License）。發音使用裝置內建語音合成。未登入時學習進度只存在這個瀏覽器；登入後會備份到雲端以便跨裝置同步，可隨時在「我的」刪除帳號。網站使用 Cloudflare Web Analytics 統計瀏覽量（不使用 Cookie）；App 另會傳送匿名學習事件（如「上完一課」）與隨機代號以計算留存，不含個人資料，可在「我的」關閉。詳見<Ext u="/privacy.html" t="隱私權政策" />。</p></section>
   </>;
 }

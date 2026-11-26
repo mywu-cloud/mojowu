@@ -15,7 +15,7 @@
 | `GET /api/me`、`PATCH /api/me` | ✅ C1（需登入；PATCH 可改 targetRetention、timezone、displayName、goal、dailyMinutes） |
 | `POST /api/auth/magic-link`、`/api/auth/verify`、`/api/auth/logout` | ✅ C2（`functions/_lib/auth.ts`）：連結 15 分鐘、一次性、每 email 每小時 5 封；連結指向請求的 origin（白名單：mojowu.app、mojowu.pages.dev、預覽網址、localhost） |
 | `POST /api/sync` | ✅ C3（`functions/_lib/sync.ts`）：一次往返雙向同步，取代草案的 `GET /cards?since=` 與 `POST /reviews:batch`（見 DECISIONS 20）。需要 `migrations/0002_sync.sql` |
-| `DELETE /api/me` | C4 |
+| `DELETE /api/me` | ✅ C4：刪除帳號與所有雲端資料（users、cards、reviews、daily_stats、mock_results、league_members、sessions，以及該 Email 的 login_tokens），同一交易內完成；匿名 events 不與帳號連結，不刪。用戶端：「我的 → 帳號 → 刪除帳號」，輸入「刪除」確認；本機進度保留（見 DECISIONS 22） |
 | 其餘 | 依功能需要再加 |
 
 **Session**：登入後發給隨機 token，伺服器只存 SHA-256；有效 90 天，每天第一次使用時展延。前端存在 localStorage `mojowu-session`（`app/src/lib/account.ts`）。
