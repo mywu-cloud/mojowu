@@ -32,7 +32,7 @@ describe('POST /api/auth/magic-link', () => {
     expect(r.status).toBe(200);
     expect(sent).toHaveLength(1);
     expect(sent[0].to).toEqual(['my@example.com']);
-    expect(sent[0].from).toBe('mojowu <login@mail.mojowu.app>');
+    expect(sent[0].from).toBe('mojowu 魔力 日語學習 <login@mail.mojowu.app>');
     expect(sent[0].html).toContain('https://mojowu.app/#login=');
     expect(sent[0].text).toContain('15 分鐘');
   });
