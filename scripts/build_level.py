@@ -18,12 +18,12 @@ ROOT = os.path.dirname(HERE)
 P = lambda name: os.path.join(HERE, name)
 
 # 單元：N4 依主題人工指定（{level}_zh.txt 第三欄）；N3 起依漢字頻率自動分（AUTO_UNITS 個，標題列出代表漢字）
-AUTO_UNITS = {"n3": 20}
+AUTO_UNITS = {"n3": 20, "n2": 20}
 UNIT_TITLES = {
     "n4": ["家與日常生活", "人際關係與敬語", "學校與學習", "工作與社會", "交通、旅行與地點",
            "飲食、購物與物品", "身體、健康與心情", "自然、天氣與時間", "常用動詞：動作與變化", "副詞、連接詞與句型"],
 }
-GRAMMAR_PER_UNIT = {"n4": 8, "n3": 6}
+GRAMMAR_PER_UNIT = {"n4": 8, "n3": 6, "n2": 8}
 
 # 原始資料中的錯誤讀音（expression → reading）
 READING_FIX = {"ごらんになる": "ごらんになる", "かまう": "かまう", "いただく": "いただく"}
@@ -31,6 +31,14 @@ READING_FIX = {"ごらんになる": "ごらんになる", "かまう": "かま�
 def kata(s): return "".join(chr(ord(c) + 0x60) if "ぁ" <= c <= "ゖ" else c for c in s)
 is_kana = lambda s: bool(re.fullmatch(r"[ぁ-ゖァ-ヺー～〜・\s();；、()（）a-zA-Z]+", s))
 KANJI_RE = re.compile(r"[一-鿿々]")
+# 原始資料的註記（感嘆詞標記「(かん)」、釋義註記等），不是表記的一部分
+NOTE_RE = re.compile(r"\s*\((?:かん|とりわけ|な)\)")
+# 原始資料表記中夾帶說明的條目（原表記 → 表記、讀音）
+EXPR_FIX = {"〜 (まる) ごと": ("～まるごと", "～まるごと"), "(かさを～) さす": ("さす", "さす"),
+            "〜(日本) 式": ("～式", "～しき"), "～いち (にほんいち)": ("～いち", "～いち"),
+            "～おしまい (おわり)": ("～おしまい", "～おしまい"), "～ほう (ひかく)": ("～ほう", "～ほう"),
+            "かび (～がはえる)": ("かび", "かび"), "しいんと (する)": ("しいんと", "しいんと"),
+            "じゅうたん (カーペット)": ("じゅうたん", "じゅうたん"), "しわ (かおの～)": ("しわ", "しわ")}
 
 def clean_reading(expr, rd):
     rd = rd.strip().replace("、", "; ")
@@ -71,8 +79,11 @@ def main():
     vocab = []
     for i, r in enumerate(rows):
         g, u = zh[i]
-        expr = r["expression"].strip().replace("、", "; ")
-        rd = clean_reading(expr, r["reading"])
+        if r["expression"].strip() in EXPR_FIX:
+            expr, rd = EXPR_FIX[r["expression"].strip()]
+        else:
+            expr = NOTE_RE.sub("", r["expression"]).strip().replace("、", "; ")
+            rd = clean_reading(expr, NOTE_RE.sub("", r["reading"]))
         primary = expr.split(";")[0].strip()
         kanji_in = list(dict.fromkeys(c for c in primary if KANJI_RE.match(c)))
         vocab.append({"id": f"{LEVEL}-v{i+1:04d}", "unit": u, "expression": expr, "reading": rd, "zh": g,
@@ -94,7 +105,8 @@ def main():
         u = first_use[c] if first_use[c] != 99 else 1 + unused.index(c) * nunits // max(1, len(unused))
         kanji.append({"id": f"{LEVEL}-k{len(kanji)+1:0{width}d}", "kanji": c, "unit": u, "traditional": trad.get(c, c),
                       "shinjitai_differs": c in trad, "zh": kzh[c], "on": [kata(x) for x in d["readings_on"]],
-                      "kun": d["readings_kun"], "strokes": d["strokes"], "freq": d["freq"],
+                      # kun 去掉「粉：デシメートル」這類片假名單位讀法
+                      "kun": [x for x in d["readings_kun"] if not re.search(r"[ァ-ヺ]", x)], "strokes": d["strokes"], "freq": d["freq"],
                       "en": d["meanings"][0] if d["meanings"] else ""})
     kid = {k["kanji"]: k["id"] for k in kanji}; kunit = {k["kanji"]: k["unit"] for k in kanji}
     for v in vocab:

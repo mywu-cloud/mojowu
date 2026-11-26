@@ -8256,8 +8256,8 @@
   {
    "id": "n3-v0078",
    "unit": 1,
-   "expression": "しまった (かん)",
-   "reading": "しまった (かん)",
+   "expression": "しまった",
+   "reading": "しまった",
    "zh": "糟了！",
    "en": "Damn it!",
    "kanji": [],
@@ -10834,8 +10834,8 @@
   {
    "id": "n3-v0246",
    "unit": 2,
-   "expression": "すみません (かん)",
-   "reading": "すみません (かん)",
+   "expression": "すみません",
+   "reading": "すみません",
    "zh": "對不起、不好意思",
    "en": "sorry, excuse me",
    "kanji": [],
@@ -24335,8 +24335,8 @@
   {
    "id": "n3-v1154",
    "unit": 11,
-   "expression": "よろしく (かん)",
-   "reading": "よろしく (かん)",
+   "expression": "よろしく",
+   "reading": "よろしく",
    "zh": "請多指教、請代問好",
    "en": "best regards, please remember me",
    "kanji": [],
@@ -32916,8 +32916,8 @@
   {
    "id": "n3-v1736",
    "unit": 16,
-   "expression": "はあ (かん)",
-   "reading": "はあ (かん)",
+   "expression": "はあ",
+   "reading": "はあ",
    "zh": "唉、是（嘆氣、應答）",
    "en": "(sigh)",
    "kanji": [],

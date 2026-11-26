@@ -1,7 +1,7 @@
 // JLPT 級數。新增一級的內容時：把它加進 AVAILABLE，並放好 public/data/<level>.json。
 export type Level = 'n5' | 'n4' | 'n3' | 'n2' | 'n1';
 export const LEVELS: Level[] = ['n5', 'n4', 'n3', 'n2', 'n1'];
-export const AVAILABLE: Level[] = ['n5', 'n4', 'n3'];
+export const AVAILABLE: Level[] = ['n5', 'n4', 'n3', 'n2'];
 export const label = (l: Level) => l.toUpperCase();
 
 /** 正式 JLPT 合格條件（日本語能力試驗官方公布；總分 180） */

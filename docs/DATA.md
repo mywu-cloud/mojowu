@@ -82,11 +82,12 @@ node scripts/validate_data.mjs                            # 驗證所有級數
 | --- | --- | --- |
 | `{level}_zh.txt` | `索引|繁中釋義|單元` | 索引＝原始 CSV 列序（0 起）；N4 單元依主題人工指定；N3 起省略單元欄（`索引|繁中釋義`），由 `AUTO_UNITS` 依漢字頻率自動分，標題列出代表漢字 |
 | `{level}_kanji_zh.txt` | `漢字|繁中字義` | 該級每個漢字都要有 |
-| `{level}_grammar.txt` | `句型|說明|日文例句|中文翻譯` | 依序每 `GRAMMAR_PER_UNIT` 條一個單元（N4 8 條、N3 6 條） |
+| `{level}_grammar.txt` | `句型|說明|日文例句|中文翻譯` | 依序每 `GRAMMAR_PER_UNIT` 條一個單元（N4 8 條、N3 6 條、N2 8 條） |
 | `{level}_false_friends.txt` | `表記|說明` | 選填，和製漢語提醒 |
 | `shinjitai_trad.json` | `{新字體: 繁體}` | 全部 JLPT 漢字共用，由 OpenCC 產生 |
 
 - 單元標題在 `build_level.py` 的 `UNIT_TITLES`。
+- 原始 CSV 的雜訊在 `build_level.py` 清掉：`NOTE_RE`（去掉「(かん)」等註記）、`EXPR_FIX`（表記夾帶說明的條目）、`READING_FIX`（錯誤讀音）；漢字訓讀去掉片假名單位讀法（粉：デシメートル）。
 - ID：`{level}-k001`、`{level}-v0001`、`{level}-g01`（N1 漢字 4 位數）。**永不改號**；新增只能往後編。
 - 漢字單元＝第一個用到它的單字所在單元；沒被用到的漢字平均分到各單元。
 - 單字的 `requires_kanji` 包含本級與較低級的漢字 ID（高於本級的漢字不列入，直接顯示）。
